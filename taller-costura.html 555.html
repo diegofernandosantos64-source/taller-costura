@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0e0c">
+<title>Taller · Gestión</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --bg:#ffffff;--card:#f7f7f5;--card2:#efefec;--border:#d4cfc8;
+    --gold:#8a6a2e;--text:#1a1814;--muted:#5a5550;--dim:#8a8580;
+    --faint:#b0ada8;--alert:#c05a20;--alertbg:#fff3ec;
+    --green:#2a7a2a;--greenbg:#edf7ed;
+  }
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:Georgia,'Times New Roman',serif;overflow-x:hidden;}
+  
+  /* HEADER */
+  .header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
+  .header-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px;}
+  .logo{font-size:18px;font-weight:700;letter-spacing:.25em;color:var(--gold);}
+  .logo-sub{font-size:10px;color:var(--dim);letter-spacing:.15em;margin-top:2px;}
+  .sync-status{font-size:11px;color:var(--dim);display:flex;align-items:center;gap:6px;}
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--faint);}
+  .sync-dot.ok{background:var(--green);}
+  .sync-dot.loading{background:var(--gold);animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+  /* NAV */
+  .nav{display:flex;border-top:1px solid var(--border);}
+  .nav-btn{flex:1;background:transparent;border:none;border-bottom:2px solid transparent;
+    color:var(--dim);padding:10px 4px;cursor:pointer;font-size:11px;letter-spacing:.06em;
+    font-family:Georgia,serif;display:flex;flex-direction:column;align-items:center;gap:3px;}
+  .nav-btn.active{color:var(--gold);border-bottom:2px solid var(--gold);}
+  .nav-icon{font-size:16px;}
+
+  /* MAIN */
+  .main{padding:16px 12px 80px;}
+
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:20px 16px;margin-bottom:12px;}
+  .card-title{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px;}
+
+  /* FIELDS */
+  .field{margin-bottom:16px;}
+  .label{display:block;font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:7px;}
+  select,input,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;
+    color:var(--text);padding:11px 12px;font-size:15px;font-family:Georgia,serif;outline:none;
+    -webkit-appearance:none;appearance:none;}
+  input[type=number]{-moz-appearance:textfield;}
+  textarea{resize:vertical;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+  /* ARREGLOS */
+  .arreglos-grid{display:flex;flex-direction:column;gap:6px;}
+  .arreglo-btn{background:var(--bg);border:1px solid var(--border);border-radius:4px;
+    color:var(--muted);padding:11px 14px;cursor:pointer;display:flex;
+    justify-content:space-between;align-items:center;font-size:13px;font-family:Georgia,serif;
+    text-align:left;width:100%;}
+  .arreglo-btn.sel{background:#1e1b14;border-color:var(--gold);color:var(--text);}
+  .arreglo-precio{color:var(--gold);font-size:12px;margin-left:8px;white-space:nowrap;}
+
+  /* CUSTOM */
+  .custom-row{display:flex;gap:8px;}
+  .add-btn{background:transparent;border:1px solid var(--border);border-radius:4px;
+    color:var(--muted);padding:11px 14px;cursor:pointer;font-size:13px;font-family:Georgia,serif;white-space:nowrap;}
+
+  /* RESUMEN */
+  .resumen-box{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:16px;}
+  .resumen-title{font-size:10px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
+  .resumen-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--card);font-size:13px;}
+  .resumen-nombre{color:var(--muted);flex:1;padding-right:8px;}
+  .resumen-precio{color:var(--gold);white-space:nowrap;}
+  .alerta-price{color:var(--alert);font-size:12px;font-style:italic;}
+  .resumen-total{margin-top:10px;font-size:15px;color:var(--text);text-align:right;font-weight:700;}
+  .remove-btn{background:transparent;border:none;color:var(--faint);cursor:pointer;font-size:16px;padding:0 6px;}
+
+  /* PRIMARY BTN */
+  .primary-btn{background:var(--gold);color:#0f0e0c;border:none;border-radius:4px;
+    padding:15px 32px;font-size:14px;font-family:Georgia,serif;letter-spacing:.1em;
+    cursor:pointer;width:100%;font-weight:700;margin-top:8px;}
+  .primary-btn:disabled{background:var(--border);color:var(--faint);cursor:not-allowed;}
+
+  /* PRENDA CARDS */
+  .prenda-card{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;}
+  .prenda-header{display:flex;justify-content:space-between;align-items:center;
+    padding:12px 14px;border-bottom:1px solid var(--border);background:var(--card2);}
+  .prenda-id{color:var(--gold);font-size:14px;font-weight:700;letter-spacing:.1em;margin-right:8px;}
+  .prenda-tipo{color:var(--text);font-size:13px;}
+  .prenda-meta{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+  .prenda-tienda{color:var(--muted);font-size:12px;}
+  .prenda-fecha{color:var(--faint);font-size:10px;}
+  .prenda-arreglos{padding:10px 14px;}
+  .prenda-ar-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--card2);font-size:13px;}
+  .prenda-ar-nombre{color:var(--muted);}
+  .prenda-ar-precio{color:var(--gold);font-size:12px;}
+  .prenda-notas{padding:8px 14px;font-size:12px;color:var(--dim);font-style:italic;border-top:1px solid var(--card2);}
+  .prenda-footer{display:flex;justify-content:space-between;align-items:center;
+    padding:10px 14px;border-top:1px solid var(--border);background:var(--card2);}
+  .prenda-total{font-size:13px;color:var(--text);}
+  .estado-badge{font-size:11px;padding:4px 10px;border-radius:20px;letter-spacing:.05em;}
+  .estado-Pendiente{background:#fff3ec;color:var(--alert);border:1px solid var(--alert);}
+  .estado-En.proceso{background:#141a1a;color:#6a9e9e;border:1px solid #6a9e9e;}
+  .estado-Listo{background:var(--greenbg);color:var(--green);border:1px solid var(--green);}
+  .estado-Entregado{background:#1a1815;color:var(--faint);border:1px solid var(--border);}
+
+  /* CONTROL */
+  .control-card{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;}
+  .control-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--card2);border-bottom:1px solid var(--border);}
+  .control-body{padding:12px 14px;}
+  .control-ar{font-size:13px;color:var(--muted);padding:4px 0;}
+  .control-notas{font-size:12px;color:var(--dim);font-style:italic;margin-top:6px;}
+  .control-footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);}
+  .ctrl-btn{flex:1;border:none;border-radius:4px;padding:10px;font-size:12px;font-family:Georgia,serif;cursor:pointer;letter-spacing:.05em;}
+  .ctrl-ok{background:var(--greenbg);color:var(--green);border:1px solid var(--green);}
+  .ctrl-inc{background:var(--alertbg);color:var(--alert);border:1px solid var(--alert);}
+  .ctrl-send{background:#14181a;color:#6a9e9e;border:1px solid #6a9e9e;}
+  .ctrl-done{background:var(--card2);color:var(--faint);border:1px solid var(--border);cursor:default;}
+
+  /* CONTABILIDAD */
+  .tienda-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+  .tienda-nombre{font-size:14px;color:var(--gold);font-weight:700;flex:1;}
+  .tienda-count{font-size:11px;color:var(--dim);}
+  .tienda-total{font-size:16px;color:var(--text);font-weight:700;}
+  .cont-prenda{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--card2);}
+  .cont-prenda-id{font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:6px;}
+  .cont-ar-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px;}
+  .cont-ar-nombre{color:var(--muted);flex:1;}
+  .cont-precio{color:var(--gold);}
+  .manual-row{display:flex;align-items:center;gap:6px;}
+  .precio-input{width:70px;text-align:right;padding:4px 8px;font-size:13px;border-color:var(--alert);}
+  .eur-label{color:var(--dim);font-size:12px;}
+  .total-card{background:#1e1b14;border:1px solid var(--gold);border-radius:6px;
+    padding:18px 20px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .total-label{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;}
+  .total-value{font-size:26px;font-weight:700;color:var(--gold);}
+  .alerta-box{background:var(--alertbg);border:1px solid var(--alert);border-radius:4px;
+    color:var(--alert);padding:12px 14px;font-size:13px;margin-top:12px;}
+
+  /* MISC */
+  .empty{text-align:center;color:var(--faint);padding:50px 20px;font-size:14px;font-style:italic;}
+  .search-row{display:flex;gap:8px;margin-bottom:12px;}
+  .search-row input{flex:1;}
+  .alerta-small{color:var(--alert);font-size:12px;}
+  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+    background:var(--gold);color:#0f0e0c;padding:10px 24px;border-radius:20px;
+    font-size:13px;font-weight:700;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
+  .toast.show{opacity:1;}
+  .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:500;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+  .spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--gold);
+    border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-text{color:var(--dim);font-size:13px;letter-spacing:.1em;}
+  select option{background:#ffffff;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo">TALLER</div>
+      <div class="logo-sub">gestión de arreglos</div>
+    </div>
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncText">Conectando…</span>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="setVista('entrada')" id="nav-entrada">
+      <span class="nav-icon">✦</span>Entrada
+    </button>
+    <button class="nav-btn" onclick="setVista('registro')" id="nav-registro">
+      <span class="nav-icon">◈</span>Registro
+    </button>
+    <button class="nav-btn" onclick="setVista('control')" id="nav-control">
+      <span class="nav-icon">◉</span>Control
+    </button>
+    <button class="nav-btn" onclick="setVista('contabilidad')" id="nav-contabilidad">
+      <span class="nav-icon">◎</span>Cobros
+    </button>
+  </nav>
+</div>
+
+<div class="main" id="main"></div>
+<div class="toast" id="toast"></div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Cargando datos…</div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1rv4abTaQRiCV487MlDU0YtvVrX2Wo3oDpp57XNdoreRRruKT3jnn09DTnEObskRI/exec";
+const SHEET_ID = "1ShNfWe2WYNDG9fm-EWeolcSpbkMEWVn29ZJhHnvXcco";
+const SHEET_NAME = "Prendas";
+
+// Columnas: Numero(0) Tienda(1) Fecha(2) TipoPrenda(3) Arreglos(4) Precios(5) Total(6) Notas(7) Estado(8) Control(9)
+const COL = {Numero:0,Tienda:1,Fecha:2,TipoPrenda:3,Arreglos:4,Precios:5,Total:6,Notas:7,Estado:8,Control:9};
+
+const TIENDAS = ["Cortefiel","Springfield","Paco Cecilio","Extreme","Goya","Serrano","Gran Vía","Callao","Preciados"];
+let tiendas = [...TIENDAS];
+
+const TIPOS = ["Pantalón","Americana","Parka","Camisa","Vestido","Falda","Otra"];
+
+const ARREGLOS = [
+  {id:"p1",tipo:"Pantalón",nombre:"Bajo",precio:4.80},
+  {id:"p2",tipo:"Pantalón",nombre:"Bajo con vuelta/talonera",precio:6.30},
+  {id:"p3",tipo:"Pantalón",nombre:"Cintura",precio:6.90},
+  {id:"p4",tipo:"Pantalón",nombre:"Trasero",precio:6.90},
+  {id:"p5",tipo:"Pantalón",nombre:"Cambiar cremallera",precio:8.40},
+  {id:"p6",tipo:"Pantalón",nombre:"Estrechar pierna",precio:9.00},
+  {id:"a1",tipo:"Americana",nombre:"Largo",precio:10.50},
+  {id:"a2",tipo:"Americana",nombre:"Acortar mangas",precio:9.80},
+  {id:"a3",tipo:"Americana",nombre:"Sacar mangas",precio:11.10},
+  {id:"a4",tipo:"Americana",nombre:"Entallar costura central",precio:9.80},
+  {id:"a5",tipo:"Americana",nombre:"Entallar costados",precio:9.80},
+  {id:"a6",tipo:"Americana",nombre:"Entallar costados con encuentro",precio:14.00},
+  {id:"a7",tipo:"Americana",nombre:"Poner hombreras",precio:8.40},
+  {id:"a8",tipo:"Americana",nombre:"Bajar cuello espalda",precio:8.40},
+  {id:"a9",tipo:"Americana",nombre:"Reducir hombros por hombros",precio:26.40},
+  {id:"a10",tipo:"Americana",nombre:"Escotar cuellos",precio:10.50},
+  {id:"a11",tipo:"Americana",nombre:"Cerrar abertura",precio:9.00},
+  {id:"a12",tipo:"Americana",nombre:"Poner coderas",precio:6.90},
+  {id:"a13",tipo:"Americana",nombre:"Cambiar hilo botones",precio:4.40},
+  {id:"pk1",tipo:"Parka",nombre:"Costado",precio:10.50},
+  {id:"pk2",tipo:"Parka",nombre:"Largo",precio:11.10},
+  {id:"pk3",tipo:"Parka",nombre:"Mangas",precio:9.00},
+  {id:"pk4",tipo:"Parka",nombre:"Cremallera",precio:13.20},
+  {id:"c1",tipo:"Camisa",nombre:"Largo",precio:6.90},
+  {id:"c2",tipo:"Camisa",nombre:"Mangas",precio:6.90},
+  {id:"c3",tipo:"Camisa",nombre:"Entalle costados",precio:6.90},
+  {id:"c4",tipo:"Camisa",nombre:"Entalle mangas",precio:6.90},
+  {id:"c5",tipo:"Camisa",nombre:"Quitar puño doble",precio:6.90},
+  {id:"v1",tipo:"Vestido",nombre:"Largo",precio:8.40},
+  {id:"v2",tipo:"Vestido",nombre:"Largo con forro",precio:9.80},
+  {id:"v3",tipo:"Vestido",nombre:"Entalle",precio:9.80},
+  {id:"v4",tipo:"Vestido",nombre:"Hombros",precio:9.80},
+  {id:"v5",tipo:"Vestido",nombre:"Mangas",precio:9.80},
+  {id:"v6",tipo:"Vestido",nombre:"Cuello",precio:9.80},
+  {id:"f1",tipo:"Falda",nombre:"Cintura",precio:8.40},
+  {id:"f2",tipo:"Falda",nombre:"Entalle",precio:9.80},
+  {id:"f3",tipo:"Falda",nombre:"Cremallera",precio:10.50},
+  {id:"f4",tipo:"Falda",nombre:"Largo",precio:8.40},
+  {id:"f5",tipo:"Falda",nombre:"Largo con forro",precio:9.80},
+];
+
+let vista = "entrada";
+let prendas = [];
+let formState = {tienda:"",numero:"",tipo:"",arreglos:[],notas:""};
+let customArreglo = "";
+let editPrecios = {};
+let filtroControl = {tienda:"",busqueda:""};
+let filtroRegistro = {tienda:"",estado:""};
+let contMes = new Date().getMonth();
+let contAno = new Date().getFullYear();
+let nuevaTienda = "";
+
+// ---- API ----
+function apiCall(payload) {
+  setSyncLoading();
+  return new Promise((resolve) => {
+    const body = JSON.stringify({sheetId:SHEET_ID, sheet:SHEET_NAME, ...payload});
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", SCRIPT_URL, true);
+    xhr.setRequestHeader("Content-Type", "text/plain");
+    xhr.onload = function() {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        setSyncOk();
+        resolve(data);
+      } catch(e) {
+        setSyncOk();
+        resolve({success:true, data:[]});
+      }
+    };
+    xhr.onerror = function() {
+      setSyncError();
+      resolve({success:false, data:[]});
+    };
+    xhr.send(body);
+  });
+}
+
+async function cargarPrendas() {
+  const data = await apiCall({action:"read"});
+  if (data.success && data.data.length > 1) {
+    prendas = data.data.slice(1).map(r => ({
+      numero: r[COL.Numero],
+      tienda: r[COL.Tienda],
+      fecha: r[COL.Fecha],
+      tipo: r[COL.TipoPrenda],
+      arreglos: JSON.parse(r[COL.Arreglos] || "[]"),
+      precios: JSON.parse(r[COL.Precios] || "[]"),
+      total: parseFloat(r[COL.Total]) || 0,
+      notas: r[COL.Notas] || "",
+      estado: r[COL.Estado] || "Pendiente",
+      control: r[COL.Control] || "Pendiente",
+    }));
+    // cargar tiendas extras
+    prendas.forEach(p => { if(!tiendas.includes(p.tienda)) tiendas.push(p.tienda); });
+  }
+  document.getElementById("loadingOverlay").style.display = "none";
+  render();
+}
+
+async function guardarPrenda() {
+  if (!formState.tienda || !formState.numero || !formState.tipo || formState.arreglos.length===0) return;
+  const hoy = new Date().toLocaleDateString("es-ES", {day:"2-digit", month:"2-digit", year:"numeric"});
+  const nombres = formState.arreglos.map(a => a.nombre);
+  const precios = formState.arreglos.map(a => a.precio !== null ? a.precio : null);
+  const total = precios.reduce((s,p) => s + (p||0), 0);
+  const row = [
+    formState.numero, formState.tienda, hoy, formState.tipo,
+    JSON.stringify(nombres), JSON.stringify(precios),
+    total, formState.notas, "Pendiente", "Pendiente"
+  ];
+  showLoading();
+  const res = await apiCall({action:"append", row});
+  hideLoading();
+  if (res.success) {
+    prendas.unshift({
+      numero:formState.numero, tienda:formState.tienda, fecha:hoy,
+      tipo:formState.tipo, arreglos:nombres, precios, total,
+      notas:formState.notas, estado:"Pendiente", control:"Pendiente"
+    });
+    formState = {tienda:formState.tienda,numero:"",tipo:"",arreglos:[],notas:""};
+    showToast("Prenda guardada ✓");
+    render();
+  }
+}
+
+async function actualizarCampo(numero, tienda, campo, valor) {
+  const colMap = {estado: COL.Estado, control: COL.Control, precios: COL.Precios, total: COL.Total};
+  await apiCall({action:"update", id:numero, tienda, updates:{[campo]:valor}, colMap});
+  const p = prendas.find(x => String(x.numero)===String(numero) && x.tienda===tienda);
+  if (p) p[campo] = valor;
+  render();
+}
+
+// ---- UI helpers ----
+function eur(n) {
+  if (n===null||n===undefined||isNaN(n)) return "—";
+  return Number(n).toFixed(2).replace(".",",")+" €";
+}
+function setSyncLoading(){
+  document.getElementById("syncDot").className="sync-dot loading";
+  document.getElementById("syncText").textContent="Sincronizando…";
+}
+function setSyncOk(){
+  document.getElementById("syncDot").className="sync-dot ok";
+  document.getElementById("syncText").textContent="Guardado en Drive";
+}
+function setSyncError(){
+  document.getElementById("syncDot").className="sync-dot";
+  document.getElementById("syncText").textContent="Sin conexión";
+}
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2500);
+}
+function showLoading(){document.getElementById("loadingOverlay").style.display="flex";}
+function hideLoading(){document.getElementById("loadingOverlay").style.display="none";}
+
+function setVista(v){
+  vista=v;
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("nav-"+v).classList.add("active");
+  render();
+}
+
+// ---- RENDER ----
+function render(){
+  const m = document.getElementById("main");
+  if (vista==="entrada") m.innerHTML = renderEntrada();
+  else if (vista==="registro") m.innerHTML = renderRegistro();
+  else if (vista==="control") m.innerHTML = renderControl();
+  else if (vista==="contabilidad") m.innerHTML = renderContabilidad();
+  bindEvents();
+}
+
+// ===== ENTRADA =====
+function renderEntrada(){
+  const arreglosPorTipo = ARREGLOS.filter(a=>a.tipo===formState.tipo);
+  const hayArreglos = formState.arreglos.length > 0;
+  const totalEstimado = formState.arreglos.reduce((s,a)=>s+(a.precio||0),0);
+
+  return `
+  <div class="card">
+    <div class="card-title">Registrar Prenda</div>
+
+    <div class="grid2">
+      <div class="field">
+        <label class="label">Tienda</label>
+        <select onchange="formState.tienda=this.value;render()">
+          <option value="">Seleccionar…</option>
+          ${tiendas.map(t=>`<option value="${t}" ${formState.tienda===t?"selected":""}>${t}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label class="label">Nº de prenda</label>
+        <input type="text" placeholder="Ej: 4521" value="${formState.numero}"
+          oninput="formState.numero=this.value">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Tipo de prenda</label>
+      <select onchange="formState.tipo=this.value;formState.arreglos=[];render()">
+        <option value="">Seleccionar…</option>
+        ${TIPOS.map(t=>`<option value="${t}" ${formState.tipo===t?"selected":""}>${t}</option>`).join("")}
+      </select>
+    </div>
+
+    ${formState.tipo && formState.tipo!=="Otra" ? `
+    <div class="field">
+      <label class="label">Arreglos</label>
+      <div class="arreglos-grid">
+        ${arreglosPorTipo.map(ar=>{
+          const sel = formState.arreglos.find(a=>a.id===ar.id);
+          return `<button class="arreglo-btn ${sel?"sel":""}" onclick="toggleArreglo('${ar.id}')">
+            <span>${ar.nombre}</span>
+            <span class="arreglo-precio">${eur(ar.precio)}</span>
+          </button>`;
+        }).join("")}
+      </div>
+    </div>` : ""}
+
+    <div class="field">
+      <label class="label">Arreglo personalizado (sin precio)</label>
+      <div class="custom-row">
+        <input type="text" placeholder="Describe el arreglo…" id="customInput"
+          value="${customArreglo}" oninput="customArreglo=this.value">
+        <button class="add-btn" onclick="addCustom()">+ Añadir</button>
+      </div>
+    </div>
+
+    ${hayArreglos ? `
+    <div class="resumen-box">
+      <div class="resumen-title">Arreglos seleccionados</div>
+      ${formState.arreglos.map((a,i)=>`
+        <div class="resumen-item">
+          <span class="resumen-nombre">${a.nombre}</span>
+          ${a.precio!==null ? `<span class="resumen-precio">${eur(a.precio)}</span>` : `<span class="alerta-price">⚠ Sin precio</span>`}
+          <button class="remove-btn" onclick="removeArreglo(${i})">×</button>
+        </div>
+      `).join("")}
+      <div class="resumen-total">Total: ${eur(totalEstimado)}</div>
+    </div>` : ""}
+
+    <div class="field">
+      <label class="label">Notas especiales</label>
+      <textarea placeholder="Ej: manga derecha 63cm, manga izquierda 65cm…" rows="3"
+        oninput="formState.notas=this.value">${formState.notas}</textarea>
+    </div>
+
+    <button class="primary-btn"
+      ${(!formState.tienda||!formState.numero||!formState.tipo||formState.arreglos.length===0)?"disabled":""}
+      onclick="guardarPrenda()">
+      Guardar prenda
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Añadir tienda nueva</div>
+    <div class="custom-row">
+      <input type="text" placeholder="Nombre de la tienda…" id="nuevaTiendaInput"
+        value="${nuevaTienda}" oninput="nuevaTienda=this.value">
+      <button class="add-btn" onclick="addTienda()">+ Añadir</button>
+    </div>
+  </div>`;
+}
+
+function toggleArreglo(id){
+  const ar = ARREGLOS.find(a=>a.id===id);
+  const idx = formState.arreglos.findIndex(a=>a.id===id);
+  if(idx>=0) formState.arreglos.splice(idx,1);
+  else formState.arreglos.push({id:ar.id,nombre:ar.nombre,precio:ar.precio});
+  render();
+}
+function addCustom(){
+  if(!customArreglo.trim()) return;
+  formState.arreglos.push({id:"c_"+Date.now(),nombre:customArreglo.trim(),precio:null});
+  customArreglo="";
+  render();
+}
+function removeArreglo(i){
+  formState.arreglos.splice(i,1);
+  render();
+}
+function addTienda(){
+  if(!nuevaTienda.trim()||tiendas.includes(nuevaTienda.trim())) return;
+  tiendas.push(nuevaTienda.trim());
+  nuevaTienda="";
+  showToast("Tienda añadida ✓");
+  render();
+}
+
+// ===== REGISTRO =====
+function renderRegistro(){
+  const filtradas = prendas.filter(p=>{
+    if(filtroRegistro.tienda && p.tienda!==filtroRegistro.tienda) return false;
+    if(filtroRegistro.estado && p.estado!==filtroRegistro.estado) return false;
+    return true;
+  });
+
+  return `
+  <div class="card">
+    <div class="card-title">Registro de prendas</div>
+    <div class="grid2">
+      <div class="field">
+        <label class="label">Tienda</label>
+        <select onchange="filtroRegistro.tienda=this.value;render()">
+          <option value="">Todas</option>
+          ${tiendas.map(t=>`<option value="${t}" ${filtroRegistro.tienda===t?"selected":""}>${t}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label class="label">Estado</label>
+        <select onchange="filtroRegistro.estado=this.value;render()">
+          <option value="">Todos</option>
+          <option>Pendiente</option><option>En proceso</option><option>Listo</option><option>Entregado</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  ${filtradas.length===0 ? `<div class="empty">No hay prendas.</div>` :
+    filtradas.map(p=>{
+      const hayPendiente = p.precios.some(x=>x===null);
+      const total = p.precios.reduce((s,x)=>s+(x||0),0);
+      const estadoClass = p.estado.replace(" ",".");
+      return `
+      <div class="prenda-card">
+        <div class="prenda-header">
+          <div>
+            <span class="prenda-id">#${p.numero}</span>
+            <span class="prenda-tipo">${p.tipo}</span>
+          </div>
+          <div class="prenda-meta">
+            <span class="prenda-tienda">${p.tienda}</span>
+            <span class="prenda-fecha">${p.fecha}</span>
+          </div>
+        </div>
+        <div class="prenda-arreglos">
+          ${p.arreglos.map((ar,i)=>`
+            <div class="prenda-ar-row">
+              <span class="prenda-ar-nombre">${ar}</span>
+              ${p.precios[i]!==null ? `<span class="prenda-ar-precio">${eur(p.precios[i])}</span>` : `<span class="alerta-price">⚠ Sin precio</span>`}
+            </div>
+          `).join("")}
+        </div>
+        ${p.notas ? `<div class="prenda-notas">📝 ${p.notas}</div>` : ""}
+        <div class="prenda-footer">
+          <div class="prenda-total">
+            ${hayPendiente?`<span class="alerta-small">⚠ Parcial: </span>`:""}
+            <strong>${eur(total)}</strong>
+          </div>
+          <select class="estado-badge estado-${estadoClass}"
+            onchange="actualizarCampo('${p.numero}','${p.tienda}','estado',this.value)">
+            <option ${p.estado==="Pendiente"?"selected":""}>Pendiente</option>
+            <option ${p.estado==="En proceso"?"selected":""}>En proceso</option>
+            <option ${p.estado==="Listo"?"selected":""}>Listo</option>
+            <option ${p.estado==="Entregado"?"selected":""}>Entregado</option>
+          </select>
+        </div>
+      </div>`;
+    }).join("")
+  }`;
+}
+
+// ===== CONTROL =====
+function renderControl(){
+  const filtradas = prendas.filter(p=>{
+    if(filtroControl.tienda && p.tienda!==filtroControl.tienda) return false;
+    if(filtroControl.busqueda && !String(p.numero).includes(filtroControl.busqueda)) return false;
+    if(p.estado==="Entregado") return false;
+    return true;
+  });
+
+  return `
+  <div class="card">
+    <div class="card-title">Control de calidad</div>
+    <div class="field">
+      <label class="label">Tienda</label>
+      <select onchange="filtroControl.tienda=this.value;render()">
+        <option value="">Todas</option>
+        ${tiendas.map(t=>`<option value="${t}" ${filtroControl.tienda===t?"selected":""}>${t}</option>`).join("")}
+      </select>
+    </div>
+    <div class="search-row">
+      <input type="text" placeholder="Buscar por número…" value="${filtroControl.busqueda}"
+        oninput="filtroControl.busqueda=this.value;render()">
+    </div>
+  </div>
+
+  ${filtradas.length===0 ? `<div class="empty">No hay prendas pendientes de control.</div>` :
+    filtradas.map(p=>`
+    <div class="control-card">
+      <div class="control-header">
+        <div>
+          <span class="prenda-id">#${p.numero}</span>
+          <span class="prenda-tipo">${p.tipo}</span>
+        </div>
+        <div class="prenda-meta">
+          <span class="prenda-tienda">${p.tienda}</span>
+          <span class="prenda-fecha">${p.fecha}</span>
+        </div>
+      </div>
+      <div class="control-body">
+        ${p.arreglos.map(ar=>`<div class="control-ar">· ${ar}</div>`).join("")}
+        ${p.notas?`<div class="control-notas">📝 ${p.notas}</div>`:""}
+      </div>
+      <div class="control-footer">
+        ${p.control==="OK" ? `
+          <button class="ctrl-btn ctrl-done">✓ Correcto</button>
+          <button class="ctrl-btn ctrl-send" onclick="actualizarCampo('${p.numero}','${p.tienda}','estado','Entregado');actualizarCampo('${p.numero}','${p.tienda}','control','Enviado')">Marcar enviado</button>
+        ` : p.control==="Incidencia" ? `
+          <button class="ctrl-btn ctrl-inc ctrl-done">⚠ Incidencia</button>
+          <button class="ctrl-btn ctrl-ok" onclick="actualizarCampo('${p.numero}','${p.tienda}','control','OK')">Resolver ✓</button>
+        ` : `
+          <button class="ctrl-btn ctrl-ok" onclick="actualizarCampo('${p.numero}','${p.tienda}','control','OK');actualizarCampo('${p.numero}','${p.tienda}','estado','Listo')">✓ Correcto</button>
+          <button class="ctrl-btn ctrl-inc" onclick="actualizarCampo('${p.numero}','${p.tienda}','control','Incidencia')">⚠ Incidencia</button>
+        `}
+      </div>
+    </div>`).join("")
+  }`;
+}
+
+// ===== CONTABILIDAD =====
+function renderContabilidad(){
+  const MESES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  const del_mes = prendas.filter(p=>{
+    const parts = p.fecha.split("/");
+    if(parts.length<3) return false;
+    return parseInt(parts[1])-1===contMes && parseInt(parts[2])===contAno;
+  });
+
+  const porTienda = {};
+  del_mes.forEach(p=>{
+    if(!porTienda[p.tienda]) porTienda[p.tienda]={prendas:[],total:0,hayPendiente:false};
+    const precios = p.precios.map((pr,i)=>{
+      const key=`${p.numero}_${p.tienda}_${i}`;
+      return editPrecios[key]!==undefined ? parseFloat(editPrecios[key]) : pr;
+    });
+    const total = precios.reduce((s,x)=>s+(isNaN(x)||x===null?0:x),0);
+    const hayPendiente = precios.some(x=>x===null||isNaN(x));
+    porTienda[p.tienda].prendas.push({...p,preciosEfectivos:precios});
+    porTienda[p.tienda].total += total;
+    if(hayPendiente) porTienda[p.tienda].hayPendiente=true;
+  });
+
+  const totalGeneral = Object.values(porTienda).reduce((s,t)=>s+t.total,0);
+  const hayPendienteGlobal = Object.values(porTienda).some(t=>t.hayPendiente);
+
+  return `
+  <div class="card">
+    <div class="card-title">Contabilidad mensual</div>
+    <div class="grid2">
+      <div class="field">
+        <label class="label">Mes</label>
+        <select onchange="contMes=parseInt(this.value);render()">
+          ${MESES.map((m,i)=>`<option value="${i}" ${contMes===i?"selected":""}>${m}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label class="label">Año</label>
+        <select onchange="contAno=parseInt(this.value);render()">
+          ${[2024,2025,2026,2027].map(y=>`<option ${contAno===y?"selected":""}>${y}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    ${hayPendienteGlobal?`<div class="alerta-box">⚠ Hay arreglos sin precio. Introdúcelos manualmente abajo.</div>`:""}
+  </div>
+
+  ${Object.keys(porTienda).length===0 ? `<div class="empty">No hay prendas en ${MESES[contMes]} ${contAno}.</div>` : `
+    ${Object.entries(porTienda).map(([tienda,data])=>`
+    <div class="card">
+      <div class="tienda-header">
+        <span class="tienda-nombre">${tienda}</span>
+        <span class="tienda-count">${data.prendas.length} prenda${data.prendas.length>1?"s":""}</span>
+        <span class="tienda-total">${data.hayPendiente?`<span class="alerta-small">⚠ </span>`:""}${eur(data.total)}</span>
+      </div>
+      ${data.prendas.map(p=>`
+      <div class="cont-prenda">
+        <div class="cont-prenda-id">#${p.numero} · ${p.tipo} · ${p.fecha}</div>
+        ${p.arreglos.map((ar,i)=>{
+          const key=`${p.numero}_${p.tienda}_${i}`;
+          const precio = p.preciosEfectivos[i];
+          return `<div class="cont-ar-row">
+            <span class="cont-ar-nombre">${ar}</span>
+            ${precio!==null&&!isNaN(precio) ? `<span class="cont-precio">${eur(precio)}</span>` : `
+            <div class="manual-row">
+              <span class="alerta-price">⚠</span>
+              <input class="precio-input" type="number" step="0.10" placeholder="0,00"
+                value="${editPrecios[key]||""}"
+                oninput="editPrecios['${key}']=this.value;render()">
+              <span class="eur-label">€</span>
+            </div>`}
+          </div>`;
+        }).join("")}
+      </div>`).join("")}
+    </div>`).join("")}
+    <div class="total-card">
+      <span class="total-label">Total ${MESES[contMes]} ${contAno}</span>
+      <span class="total-value">${eur(totalGeneral)}</span>
+    </div>
+  `}`;
+}
+
+function bindEvents(){}
+
+// ---- INIT ----
+cargarPrendas();
+</script>
+</body>
+</html>
