@@ -260,6 +260,9 @@ let filtroControl = {tienda:"",busqueda:""};
 let filtroRegistro = {tienda:"",estado:""};
 let contMes = new Date().getMonth();
 let contAno = new Date().getFullYear();
+let prendasContabilidad = null;
+let contMesCargado = new Date().getMonth();
+let contAnoCargado = new Date().getFullYear();
 let nuevaTienda = "";
 
 // ---- API ----
@@ -295,25 +298,43 @@ async function cargarTiendas() {
   }
 }
 
+function parsePrendas(data) {
+  return data.slice(1).map(r => ({
+    numero: r[COL.Numero],
+    tienda: r[COL.Tienda],
+    fecha: r[COL.Fecha],
+    tipo: r[COL.TipoPrenda],
+    arreglos: JSON.parse(r[COL.Arreglos] || "[]"),
+    precios: JSON.parse(r[COL.Precios] || "[]"),
+    total: parseFloat(r[COL.Total]) || 0,
+    notas: r[COL.Notas] || "",
+    estado: r[COL.Estado] || "Pendiente",
+    control: r[COL.Control] || "Pendiente",
+  }));
+}
+
 async function cargarPrendas() {
   await cargarTiendas();
-  const data = await apiCall({action:"read"});
-  if (data.success && data.data.length > 1) {
-    prendas = data.data.slice(1).map(r => ({
-      numero: r[COL.Numero],
-      tienda: r[COL.Tienda],
-      fecha: r[COL.Fecha],
-      tipo: r[COL.TipoPrenda],
-      arreglos: JSON.parse(r[COL.Arreglos] || "[]"),
-      precios: JSON.parse(r[COL.Precios] || "[]"),
-      total: parseFloat(r[COL.Total]) || 0,
-      notas: r[COL.Notas] || "",
-      estado: r[COL.Estado] || "Pendiente",
-      control: r[COL.Control] || "Pendiente",
-    }));
+  const mes = new Date().getMonth() + 1;
+  const ano = new Date().getFullYear();
+  const data = await apiCall({action:"readMes", mes, ano});
+  if (data.success && data.data && data.data.length > 1) {
+    prendas = parsePrendas(data.data);
+  } else {
+    prendas = [];
   }
   document.getElementById("loadingOverlay").style.display = "none";
   render();
+}
+
+async function cargarMes(mes, ano) {
+  showLoading();
+  const data = await apiCall({action:"readMes", mes:mes+1, ano});
+  hideLoading();
+  if (data.success && data.data && data.data.length > 1) {
+    return parsePrendas(data.data);
+  }
+  return [];
 }
 
 async function addTienda() {
@@ -686,11 +707,11 @@ function renderControl(){
 function renderContabilidad(){
   const MESES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
-  const del_mes = prendas.filter(p=>{
-    const parts = p.fecha.split("/");
-    if(parts.length<3) return false;
-    return parseInt(parts[1])-1===contMes && parseInt(parts[2])===contAno;
-  });
+  // Si el mes seleccionado es el actual usar prendas en memoria
+  // Si es otro mes usar prendasContabilidad que se carga bajo demanda
+  const esActual = contMes === new Date().getMonth() && contAno === new Date().getFullYear();
+  const fuenteDatos = esActual ? prendas : (prendasContabilidad || []);
+  const del_mes = fuenteDatos;
 
   const porTienda = {};
   del_mes.forEach(p=>{
@@ -715,13 +736,13 @@ function renderContabilidad(){
     <div class="grid2">
       <div class="field">
         <label class="label">Mes</label>
-        <select onchange="contMes=parseInt(this.value);render()">
+        <select onchange="contMes=parseInt(this.value);cargarContabilidad()">
           ${MESES.map((m,i)=>`<option value="${i}" ${contMes===i?"selected":""}>${m}</option>`).join("")}
         </select>
       </div>
       <div class="field">
         <label class="label">Año</label>
-        <select onchange="contAno=parseInt(this.value);render()">
+        <select onchange="contAno=parseInt(this.value);cargarContabilidad()">
           ${[2024,2025,2026,2027].map(y=>`<option ${contAno===y?"selected":""}>${y}</option>`).join("")}
         </select>
       </div>
@@ -750,7 +771,7 @@ function renderContabilidad(){
               <span class="alerta-price">⚠</span>
               <input class="precio-input" type="number" step="0.10" placeholder="0,00"
                 value="${editPrecios[key]||""}"
-                oninput="editPrecios['${key}']=this.value;render()">
+                oninput=\"editPrecios['${key}']=this.value\" onchange=\"render()\">
               <span class="eur-label">€</span>
             </div>`}
           </div>`;
@@ -795,6 +816,17 @@ async function borrarPrenda(numero, tienda) {
   } else {
     alert("Error al borrar. Inténtalo de nuevo.");
   }
+}
+
+async function cargarContabilidad() {
+  const esActual = contMes === new Date().getMonth() && contAno === new Date().getFullYear();
+  if (esActual) {
+    prendasContabilidad = null;
+    render();
+    return;
+  }
+  prendasContabilidad = await cargarMes(contMes, contAno);
+  render();
 }
 
 function renderTiendas(){
