@@ -561,13 +561,21 @@ function renderRegistro(){
             ${hayPendiente?`<span class="alerta-small">⚠ Parcial: </span>`:""}
             <strong>${eur(total)}</strong>
           </div>
-          <select class="estado-badge estado-${estadoClass}"
-            onchange="actualizarCampo('${p.numero}','${p.tienda}','estado',this.value)">
-            <option ${p.estado==="Pendiente"?"selected":""}>Pendiente</option>
-            <option ${p.estado==="En proceso"?"selected":""}>En proceso</option>
-            <option ${p.estado==="Listo"?"selected":""}>Listo</option>
-            <option ${p.estado==="Entregado"?"selected":""}>Entregado</option>
-          </select>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select class="estado-badge estado-${estadoClass}"
+              onchange="actualizarCampo('${p.numero}','${p.tienda}','estado',this.value)">
+              <option ${p.estado==="Pendiente"?"selected":""}>Pendiente</option>
+              <option ${p.estado==="En proceso"?"selected":""}>En proceso</option>
+              <option ${p.estado==="Listo"?"selected":""}>Listo</option>
+              <option ${p.estado==="Entregado"?"selected":""}>Entregado</option>
+            </select>
+            <button onclick="borrarPrenda('${p.numero}','${p.tienda}')"
+              style="background:transparent;border:1px solid #c05a20;border-radius:4px;
+              color:#c05a20;padding:6px 10px;font-size:12px;cursor:pointer;
+              font-family:Georgia,serif;white-space:nowrap;">
+              🗑️ Borrar
+            </button>
+          </div>
         </div>
       </div>`;
     }).join("")
@@ -712,6 +720,20 @@ function renderContabilidad(){
       <span class="total-value">${eur(totalGeneral)}</span>
     </div>
   `}`;
+}
+
+async function borrarPrenda(numero, tienda) {
+  if (!confirm("¿Seguro que quieres borrar la prenda #" + numero + "?")) return;
+  showLoading();
+  const res = await apiCall({action:"delete", numero, tienda});
+  hideLoading();
+  if (res.success) {
+    prendas = prendas.filter(p => !(String(p.numero)===String(numero) && p.tienda===tienda));
+    showToast("Prenda borrada ✓");
+    render();
+  } else {
+    alert("Error al borrar. Inténtalo de nuevo.");
+  }
 }
 
 function bindEvents(){}
