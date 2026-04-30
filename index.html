@@ -581,7 +581,12 @@ function renderRegistro(){
           ${p.arreglos.map((ar,i)=>`
             <div class="prenda-ar-row">
               <span class="prenda-ar-nombre">${ar}</span>
-              ${p.precios[i]!==null ? `<span class="prenda-ar-precio">${eur(p.precios[i])}</span>` : `<span class="alerta-price">⚠ Sin precio</span>`}
+              <div style="display:flex;align-items:center;gap:8px;">
+                ${p.precios[i]!==null ? `<span class="prenda-ar-precio">${eur(p.precios[i])}</span>` : `<span class="alerta-price">⚠ Sin precio</span>`}
+                <button onclick="deleteArreglo('${p.numero}','${p.tienda}',${i})"
+                  style="background:transparent;border:none;color:#c05a20;
+                  cursor:pointer;font-size:14px;padding:2px 4px;">✕</button>
+              </div>
             </div>
           `).join("")}
         </div>
@@ -750,6 +755,25 @@ function renderContabilidad(){
       <span class="total-value">${eur(totalGeneral)}</span>
     </div>
   `}`;
+}
+
+async function deleteArreglo(numero, tienda, idx) {
+  if (!confirm("¿Eliminar este arreglo?")) return;
+  showLoading();
+  const res = await apiCall({action:"deleteArreglo", numero, tienda, idx});
+  hideLoading();
+  if (res.success) {
+    const p = prendas.find(x => String(x.numero)===String(numero) && x.tienda===tienda);
+    if (p) {
+      p.arreglos.splice(idx, 1);
+      p.precios.splice(idx, 1);
+      p.total = p.precios.reduce((s,x) => s + (x||0), 0);
+    }
+    showToast("Arreglo eliminado ✓");
+    render();
+  } else {
+    alert("Error al eliminar. Inténtalo de nuevo.");
+  }
 }
 
 async function borrarPrenda(numero, tienda) {
