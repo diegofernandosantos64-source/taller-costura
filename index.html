@@ -350,7 +350,7 @@ async function deleteTienda(nombre) {
   }
 }
 
-async function guardarPrenda() {
+function guardarPrenda() {
   if (!formState.tienda || !formState.numero || !formState.tipo || formState.arreglos.length===0) return;
   const hoy = new Date().toLocaleDateString("es-ES", {day:"2-digit", month:"2-digit", year:"numeric"});
   const nombres = formState.arreglos.map(a => a.nombre);
@@ -361,19 +361,26 @@ async function guardarPrenda() {
     JSON.stringify(nombres), JSON.stringify(precios),
     total, formState.notas, "Pendiente", "Pendiente"
   ];
-  showLoading();
-  const res = await apiCall({action:"append", row});
-  hideLoading();
-  if (res.success) {
-    prendas.unshift({
-      numero:formState.numero, tienda:formState.tienda, fecha:hoy,
-      tipo:formState.tipo, arreglos:nombres, precios, total,
-      notas:formState.notas, estado:"Pendiente", control:"Pendiente"
-    });
-    formState = {tienda:formState.tienda,numero:"",tipo:"",arreglos:[],notas:""};
-    showToast("Prenda guardada ✓");
-    render();
-  }
+
+  // Añadir a memoria instantáneamente
+  prendas.unshift({
+    numero:formState.numero, tienda:formState.tienda, fecha:hoy,
+    tipo:formState.tipo, arreglos:nombres, precios, total,
+    notas:formState.notas, estado:"Pendiente", control:"Pendiente"
+  });
+
+  // Resetear formulario inmediatamente
+  formState = {tienda:formState.tienda, numero:"", tipo:"", arreglos:[], notas:""};
+  customArreglo = "";
+  showToast("Prenda guardada ✓");
+  render();
+
+  // Enviar a Google Sheets en segundo plano
+  apiCall({action:"append", row}).then(res => {
+    if (!res.success) {
+      showToast("⚠ Error al sincronizar con Drive");
+    }
+  });
 }
 
 async function actualizarCampo(numero, tienda, campo, valor) {
