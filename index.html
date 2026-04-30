@@ -31,8 +31,8 @@
   /* NAV */
   .nav{display:flex;border-top:1px solid var(--border);}
   .nav-btn{flex:1;background:transparent;border:none;border-bottom:2px solid transparent;
-    color:var(--dim);padding:10px 4px;cursor:pointer;font-size:11px;letter-spacing:.06em;
-    font-family:Georgia,serif;display:flex;flex-direction:column;align-items:center;gap:3px;}
+    color:var(--dim);padding:8px 2px;cursor:pointer;font-size:10px;letter-spacing:.04em;
+    font-family:Georgia,serif;display:flex;flex-direction:column;align-items:center;gap:2px;}
   .nav-btn.active{color:var(--gold);border-bottom:2px solid var(--gold);}
   .nav-icon{font-size:16px;}
 
@@ -183,6 +183,9 @@
     <button class="nav-btn" onclick="setVista('contabilidad')" id="nav-contabilidad">
       <span class="nav-icon">◎</span>Cobros
     </button>
+    <button class="nav-btn" onclick="setVista('tiendas')" id="nav-tiendas">
+      <span class="nav-icon">◫</span>Tiendas
+    </button>
   </nav>
 </div>
 
@@ -202,8 +205,7 @@ const SHEET_NAME = "Prendas";
 // Columnas: Numero(0) Tienda(1) Fecha(2) TipoPrenda(3) Arreglos(4) Precios(5) Total(6) Notas(7) Estado(8) Control(9)
 const COL = {Numero:0,Tienda:1,Fecha:2,TipoPrenda:3,Arreglos:4,Precios:5,Total:6,Notas:7,Estado:8,Control:9};
 
-const TIENDAS = ["Cortefiel","Springfield","Paco Cecilio","Extreme","Goya","Serrano","Gran Vía","Callao","Preciados"];
-let tiendas = [...TIENDAS];
+let tiendas = [];
 
 const TIPOS = ["Pantalón","Americana","Parka","Camisa","Vestido","Falda","Otra"];
 
@@ -286,7 +288,15 @@ function apiCall(payload) {
   });
 }
 
+async function cargarTiendas() {
+  const data = await apiCall({action:"getTiendas"});
+  if (data.success && Array.isArray(data.data)) {
+    tiendas = data.data.filter(t => t && t.trim() !== "");
+  }
+}
+
 async function cargarPrendas() {
+  await cargarTiendas();
   const data = await apiCall({action:"read"});
   if (data.success && data.data.length > 1) {
     prendas = data.data.slice(1).map(r => ({
@@ -301,11 +311,43 @@ async function cargarPrendas() {
       estado: r[COL.Estado] || "Pendiente",
       control: r[COL.Control] || "Pendiente",
     }));
-    // cargar tiendas extras
-    prendas.forEach(p => { if(!tiendas.includes(p.tienda)) tiendas.push(p.tienda); });
   }
   document.getElementById("loadingOverlay").style.display = "none";
   render();
+}
+
+async function addTienda() {
+  const input = document.getElementById("nuevaTiendaInput");
+  const nombre = input ? input.value.trim() : nuevaTienda.trim();
+  if (!nombre) { alert("Escribe el nombre de la tienda."); return; }
+  if (tiendas.map(t=>t.toLowerCase()).includes(nombre.toLowerCase())) {
+    alert("Esa tienda ya existe."); return;
+  }
+  showLoading();
+  const res = await apiCall({action:"addTienda", nombre});
+  hideLoading();
+  if (res.success) {
+    tiendas.push(nombre);
+    nuevaTienda = "";
+    showToast("Tienda añadida ✓");
+    render();
+  } else {
+    alert("Error: " + (res.error || "No se pudo añadir"));
+  }
+}
+
+async function deleteTienda(nombre) {
+  if (!confirm("¿Seguro que quieres eliminar la tienda " + nombre + "?")) return;
+  showLoading();
+  const res = await apiCall({action:"deleteTienda", nombre});
+  hideLoading();
+  if (res.success) {
+    tiendas = tiendas.filter(t => t !== nombre);
+    showToast("Tienda eliminada ✓");
+    render();
+  } else {
+    alert("Error: " + (res.error || "No se pudo eliminar"));
+  }
 }
 
 async function guardarPrenda() {
@@ -381,6 +423,7 @@ function render(){
   else if (vista==="registro") m.innerHTML = renderRegistro();
   else if (vista==="control") m.innerHTML = renderControl();
   else if (vista==="contabilidad") m.innerHTML = renderContabilidad();
+  else if (vista==="tiendas") m.innerHTML = renderTiendas();
   bindEvents();
 }
 
@@ -466,14 +509,7 @@ function renderEntrada(){
     </button>
   </div>
 
-  <div class="card">
-    <div class="card-title">Añadir tienda nueva</div>
-    <div class="custom-row">
-      <input type="text" placeholder="Nombre de la tienda…" id="nuevaTiendaInput"
-        value="${nuevaTienda}" oninput="nuevaTienda=this.value">
-      <button class="add-btn" onclick="addTienda()">+ Añadir</button>
-    </div>
-  </div>`;
+`;
 }
 
 function toggleArreglo(id){
@@ -493,13 +529,7 @@ function removeArreglo(i){
   formState.arreglos.splice(i,1);
   render();
 }
-function addTienda(){
-  if(!nuevaTienda.trim()||tiendas.includes(nuevaTienda.trim())) return;
-  tiendas.push(nuevaTienda.trim());
-  nuevaTienda="";
-  showToast("Tienda añadida ✓");
-  render();
-}
+
 
 // ===== REGISTRO =====
 function renderRegistro(){
@@ -734,6 +764,37 @@ async function borrarPrenda(numero, tienda) {
   } else {
     alert("Error al borrar. Inténtalo de nuevo.");
   }
+}
+
+function renderTiendas(){
+  return `
+  <div class="card">
+    <div class="card-title">Gestión de tiendas</div>
+    <div class="field">
+      <label class="label">Añadir tienda nueva</label>
+      <div class="custom-row">
+        <input type="text" placeholder="Nombre de la tienda…" id="nuevaTiendaInput"
+          value="${nuevaTienda}" oninput="nuevaTienda=this.value"
+          onkeydown="if(event.key==='Enter') addTienda()">
+        <button class="add-btn" onclick="addTienda()">+ Añadir</button>
+      </div>
+    </div>
+  </div>
+
+  ${tiendas.length === 0 ? `<div class="empty">No hay tiendas. Añade la primera.</div>` : `
+  <div class="card">
+    <div class="card-title">${tiendas.length} tienda${tiendas.length>1?"s":""} registrada${tiendas.length>1?"s":""}</div>
+    ${tiendas.map(t => `
+    <div style="display:flex;justify-content:space-between;align-items:center;
+      padding:14px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:15px;color:var(--text);">${t}</span>
+      <button onclick="deleteTienda('${t}')"
+        style="background:transparent;border:1px solid #c05a20;border-radius:4px;
+        color:#c05a20;padding:6px 12px;font-size:12px;cursor:pointer;font-family:Georgia,serif;">
+        🗑️ Eliminar
+      </button>
+    </div>`).join("")}
+  </div>`}`;
 }
 
 function bindEvents(){}
