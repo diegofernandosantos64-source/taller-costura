@@ -207,7 +207,9 @@ const COL = {Numero:0,Tienda:1,Fecha:2,TipoPrenda:3,Arreglos:4,Precios:5,Total:6
 
 let tiendas = [];
 
-const TIPOS = ["Pantalón","Americana","Parka","Camisa","Vestido","Falda","Otra"];
+const TIPOS_BASE = ["Pantalón","Americana","Parka","Camisa","Vestido","Falda"];
+let tiposCustom = []; // tipos añadidos por el usuario
+let arreglosCustom = []; // arreglos personalizados guardados en Sheets
 
 const ARREGLOS = [
   {id:"p1",tipo:"Pantalón",nombre:"Bajo",precio:4.80},
@@ -253,7 +255,8 @@ const ARREGLOS = [
 
 let vista = "entrada";
 let prendas = [];
-let formState = {tienda:"",numero:"",tipo:"",arreglos:[],notas:""};
+let formState = {tienda:"",numero:"",tipo:"",tipoCustom:"",arreglos:[],notas:""};
+let customPrecio = null;
 let customArreglo = "";
 let editPrecios = {};
 let filtroControl = {tienda:"",busqueda:""};
@@ -298,6 +301,19 @@ async function cargarTiendas() {
   }
 }
 
+async function cargarTiposYArreglos() {
+  const [dataTipos, dataArreglos] = await Promise.all([
+    apiCall({action:"getTipos"}),
+    apiCall({action:"getArreglosCustom"})
+  ]);
+  if (dataTipos.success && Array.isArray(dataTipos.data)) {
+    tiposCustom = dataTipos.data.filter(t => t && t.trim() !== "");
+  }
+  if (dataArreglos.success && Array.isArray(dataArreglos.data)) {
+    arreglosCustom = dataArreglos.data;
+  }
+}
+
 function parsePrendas(data) {
   return data.slice(1).map(r => ({
     numero: r[COL.Numero],
@@ -314,7 +330,7 @@ function parsePrendas(data) {
 }
 
 async function cargarPrendas() {
-  await cargarTiendas();
+  await Promise.all([cargarTiendas(), cargarTiposYArreglos()]);
   const mes = new Date().getMonth() + 1;
   const ano = new Date().getFullYear();
   const data = await apiCall({action:"readMes", mes, ano});
@@ -391,8 +407,9 @@ function guardarPrenda() {
   });
 
   // Resetear formulario inmediatamente
-  formState = {tienda:formState.tienda, numero:"", tipo:"", arreglos:[], notas:""};
+  formState = {tienda:formState.tienda, numero:"", tipo:"", tipoCustom:"", arreglos:[], notas:""};
   customArreglo = "";
+  customPrecio = null;
   showToast("Prenda guardada ✓");
   render();
 
@@ -482,11 +499,23 @@ function renderEntrada(){
 
     <div class="field">
       <label class="label">Tipo de prenda</label>
-      <select onchange="formState.tipo=this.value;formState.arreglos=[];render()">
+      <select onchange="formState.tipo=this.value;formState.tipoCustom='';formState.arreglos=[];render()">
         <option value="">Seleccionar…</option>
-        ${TIPOS.map(t=>`<option value="${t}" ${formState.tipo===t?"selected":""}>${t}</option>`).join("")}
+        ${TIPOS_BASE.map(t=>`<option value="${t}" ${formState.tipo===t?"selected":""}>${t}</option>`).join("")}
+        ${tiposCustom.map(t=>`<option value="${t}" ${formState.tipo===t?"selected":""}>${t}</option>`).join("")}
+        <option value="Otra" ${formState.tipo==="Otra"?"selected":""}>+ Añadir tipo nuevo…</option>
       </select>
     </div>
+
+    ${formState.tipo === "Otra" ? `
+    <div class="field">
+      <label class="label">Nombre del nuevo tipo</label>
+      <div class="custom-row">
+        <input type="text" placeholder="Ej: Traje, Abrigo…" id="tipoCustomInput"
+          value="${formState.tipoCustom||''}" oninput="formState.tipoCustom=this.value">
+        <button class="add-btn" onclick="guardarTipoCustom()">+ Guardar tipo</button>
+      </div>
+    </div>` : ""}
 
     ${formState.tipo && formState.tipo!=="Otra" ? `
     <div class="field">
@@ -499,15 +528,27 @@ function renderEntrada(){
             <span class="arreglo-precio">${eur(ar.precio)}</span>
           </button>`;
         }).join("")}
+        ${arreglosCustom.filter(a=>a.tipo===formState.tipo).map(a=>{
+          const idCustom = "custom_saved_"+a.nombre;
+          const sel = formState.arreglos.find(x=>x.id===idCustom);
+          return `<button class="arreglo-btn ${sel?"sel":""}" onclick="toggleArregloCustomSaved('${a.nombre}',${a.precio},'${formState.tipo}')">
+            <span>${a.nombre}</span>
+            <span class="arreglo-precio">${eur(a.precio)}</span>
+          </button>`;
+        }).join("")}
       </div>
     </div>` : ""}
 
     <div class="field">
-      <label class="label">Arreglo personalizado (sin precio)</label>
-      <div class="custom-row">
-        <input type="text" placeholder="Describe el arreglo…" id="customInput"
+      <label class="label">Arreglo nuevo (se guardará para siempre)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input type="text" style="flex:2;min-width:140px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:11px 12px;font-size:15px;font-family:Georgia,serif;outline:none;"
+          placeholder="Nombre del arreglo…" id="customInput"
           value="${customArreglo}" oninput="customArreglo=this.value">
-        <button class="add-btn" onclick="addCustom()">+ Añadir</button>
+        <input type="number" step="0.10" style="flex:1;min-width:80px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:11px 12px;font-size:15px;font-family:Georgia,serif;outline:none;"
+          placeholder="Precio €" id="customPrecioInput"
+          value="${customPrecio||''}" oninput="customPrecio=parseFloat(this.value)||null">
+        <button class="add-btn" onclick="addCustom()">+ Guardar</button>
       </div>
     </div>
 
@@ -549,9 +590,60 @@ function toggleArreglo(id){
 }
 function addCustom(){
   if(!customArreglo.trim()) return;
-  formState.arreglos.push({id:"c_"+Date.now(),nombre:customArreglo.trim(),precio:null});
-  customArreglo="";
+  if(!formState.tipo || formState.tipo==="Otra") {
+    alert("Selecciona primero el tipo de prenda.");
+    return;
+  }
+  const nombre = customArreglo.trim();
+  const precio = customPrecio;
+  const tipo = formState.tipo;
+  const idCustom = "custom_saved_"+nombre;
+
+  // Añadir al formulario actual
+  formState.arreglos.push({id:idCustom, nombre, precio});
+  customArreglo = "";
+  customPrecio = null;
+
+  // Guardar en Sheets en segundo plano
+  apiCall({action:"addArregloCustom", tipo, nombre, precio}).then(res => {
+    if (res.success) {
+      arreglosCustom.push({tipo, nombre, precio});
+      showToast("Arreglo guardado ✓");
+    } else if (res.error && res.error.includes("ya existe")) {
+      showToast("Arreglo ya registrado");
+    }
+  });
   render();
+}
+
+function toggleArregloCustomSaved(nombre, precio, tipo){
+  const idCustom = "custom_saved_"+nombre;
+  const idx = formState.arreglos.findIndex(a=>a.id===idCustom);
+  if(idx>=0) formState.arreglos.splice(idx,1);
+  else formState.arreglos.push({id:idCustom, nombre, precio});
+  render();
+}
+
+async function guardarTipoCustom(){
+  const nombre = formState.tipoCustom ? formState.tipoCustom.trim() : "";
+  if(!nombre){ alert("Escribe el nombre del nuevo tipo."); return; }
+  if(TIPOS_BASE.map(t=>t.toLowerCase()).includes(nombre.toLowerCase()) ||
+     tiposCustom.map(t=>t.toLowerCase()).includes(nombre.toLowerCase())){
+    alert("Ese tipo ya existe."); return;
+  }
+  showLoading();
+  const res = await apiCall({action:"addTipo", nombre});
+  hideLoading();
+  if(res.success){
+    tiposCustom.push(nombre);
+    formState.tipo = nombre;
+    formState.tipoCustom = "";
+    formState.arreglos = [];
+    showToast("Tipo guardado ✓");
+    render();
+  } else {
+    alert("Error: " + (res.error||"No se pudo guardar"));
+  }
 }
 function removeArreglo(i){
   formState.arreglos.splice(i,1);
@@ -727,7 +819,6 @@ function renderContabilidad(){
     if(hayPendiente) porTienda[p.tienda].hayPendiente=true;
   });
 
-  const totalGeneral = Object.values(porTienda).reduce((s,t)=>s+t.total,0);
   const hayPendienteGlobal = Object.values(porTienda).some(t=>t.hayPendiente);
 
   return `
@@ -778,10 +869,7 @@ function renderContabilidad(){
         }).join("")}
       </div>`).join("")}
     </div>`).join("")}
-    <div class="total-card">
-      <span class="total-label">Total ${MESES[contMes]} ${contAno}</span>
-      <span class="total-value">${eur(totalGeneral)}</span>
-    </div>
+
   `}`;
 }
 
@@ -815,6 +903,20 @@ async function borrarPrenda(numero, tienda) {
     render();
   } else {
     alert("Error al borrar. Inténtalo de nuevo.");
+  }
+}
+
+async function eliminarArregloCustom(tipo, nombre) {
+  if (!confirm("¿Eliminar el arreglo " + nombre + "?")) return;
+  showLoading();
+  const res = await apiCall({action:"deleteArregloCustom", tipo, nombre});
+  hideLoading();
+  if (res.success) {
+    arreglosCustom = arreglosCustom.filter(a => !(a.tipo===tipo && a.nombre===nombre));
+    showToast("Arreglo eliminado ✓");
+    render();
+  } else {
+    alert("Error: " + (res.error||"No se pudo eliminar"));
   }
 }
 
@@ -857,7 +959,28 @@ function renderTiendas(){
         🗑️ Eliminar
       </button>
     </div>`).join("")}
-  </div>`}`;
+  </div>`}
+
+  ${arreglosCustom.length > 0 ? `
+  <div class="card">
+    <div class="card-title">Arreglos personalizados guardados</div>
+    ${[...new Set(arreglosCustom.map(a=>a.tipo))].map(tipo => `
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;">${tipo}</div>
+        ${arreglosCustom.filter(a=>a.tipo===tipo).map(a=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;
+          padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+          <span style="font-size:14px;color:var(--text);flex:1;">${a.nombre}</span>
+          <span style="font-size:13px;color:var(--gold);min-width:60px;text-align:right;">${eur(a.precio)}</span>
+          <button onclick="eliminarArregloCustom('${a.tipo}','${a.nombre}')"
+            style="background:transparent;border:1px solid #c05a20;border-radius:4px;
+            color:#c05a20;padding:4px 8px;font-size:12px;cursor:pointer;font-family:Georgia,serif;">
+            🗑️
+          </button>
+        </div>`).join("")}
+      </div>
+    `).join("")}
+  </div>` : ""}`;
 }
 
 function bindEvents(){}
