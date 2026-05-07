@@ -391,7 +391,7 @@ function renderEntrada() {
       <div class="field">
         <label class="label">Nº de grupo</label>
         <input type="text" placeholder="Ej: 4521" value="${formState.numeroGrupo}"
-          inputmode="numeric" pattern="[0-9]*"
+          inputmode="numeric"
           oninput="formState.numeroGrupo=this.value">
       </div>
     </div>
@@ -699,7 +699,7 @@ function renderControl() {
     <div class="field">
       <label class="label">Buscar por número</label>
       <input type="text" placeholder="Ej: 4521" value="${filtroControl.busqueda}"
-        inputmode="numeric" pattern="[0-9]*"
+        inputmode="numeric"
         oninput="filtroControl.busqueda=this.value" onchange="render()" onkeydown="if(event.key==='Enter'){this.blur()}">
     </div>
   </div>
