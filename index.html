@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f0e0c">
+<meta name="theme-color" content="#ffffff">
 <title>Taller · Gestión</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -16,8 +16,7 @@
     --green:#2a7a2a;--greenbg:#edf7ed;
   }
   html,body{height:100%;background:var(--bg);color:var(--text);font-family:Georgia,'Times New Roman',serif;overflow-x:hidden;}
-  
-  /* HEADER */
+
   .header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
   .header-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px;}
   .logo{font-size:18px;font-weight:700;letter-spacing:.25em;color:var(--gold);}
@@ -28,7 +27,6 @@
   .sync-dot.loading{background:var(--gold);animation:pulse 1s infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-  /* NAV */
   .nav{display:flex;border-top:1px solid var(--border);}
   .nav-btn{flex:1;background:transparent;border:none;border-bottom:2px solid transparent;
     color:var(--dim);padding:8px 2px;cursor:pointer;font-size:10px;letter-spacing:.04em;
@@ -36,38 +34,33 @@
   .nav-btn.active{color:var(--gold);border-bottom:2px solid var(--gold);}
   .nav-icon{font-size:16px;}
 
-  /* MAIN */
   .main{padding:16px 12px 80px;}
 
-  /* CARDS */
   .card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:20px 16px;margin-bottom:12px;}
   .card-title{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px;}
 
-  /* FIELDS */
   .field{margin-bottom:16px;}
   .label{display:block;font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:7px;}
   select,input,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;
     color:var(--text);padding:11px 12px;font-size:15px;font-family:Georgia,serif;outline:none;
     -webkit-appearance:none;appearance:none;}
   input[type=number]{-moz-appearance:textfield;}
+  input[type=date]{color:var(--text);}
   textarea{resize:vertical;}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-  /* ARREGLOS */
   .arreglos-grid{display:flex;flex-direction:column;gap:6px;}
   .arreglo-btn{background:var(--bg);border:1px solid var(--border);border-radius:4px;
     color:var(--muted);padding:11px 14px;cursor:pointer;display:flex;
     justify-content:space-between;align-items:center;font-size:13px;font-family:Georgia,serif;
     text-align:left;width:100%;}
-  .arreglo-btn.sel{background:#1e1b14;border-color:var(--gold);color:var(--text);}
+  .arreglo-btn.sel{background:#f0ebe0;border-color:var(--gold);color:var(--text);}
   .arreglo-precio{color:var(--gold);font-size:12px;margin-left:8px;white-space:nowrap;}
 
-  /* CUSTOM */
   .custom-row{display:flex;gap:8px;}
   .add-btn{background:transparent;border:1px solid var(--border);border-radius:4px;
     color:var(--muted);padding:11px 14px;cursor:pointer;font-size:13px;font-family:Georgia,serif;white-space:nowrap;}
 
-  /* RESUMEN */
   .resumen-box{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:16px;}
   .resumen-title{font-size:10px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
   .resumen-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--card);font-size:13px;}
@@ -77,75 +70,74 @@
   .resumen-total{margin-top:10px;font-size:15px;color:var(--text);text-align:right;font-weight:700;}
   .remove-btn{background:transparent;border:none;color:var(--faint);cursor:pointer;font-size:16px;padding:0 6px;}
 
-  /* PRIMARY BTN */
-  .primary-btn{background:var(--gold);color:#0f0e0c;border:none;border-radius:4px;
+  .primary-btn{background:var(--gold);color:#fff;border:none;border-radius:4px;
     padding:15px 32px;font-size:14px;font-family:Georgia,serif;letter-spacing:.1em;
     cursor:pointer;width:100%;font-weight:700;margin-top:8px;}
   .primary-btn:disabled{background:var(--border);color:var(--faint);cursor:not-allowed;}
 
-  /* PRENDA CARDS */
-  .prenda-card{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;}
-  .prenda-header{display:flex;justify-content:space-between;align-items:center;
+  /* GRUPO CARDS */
+  .grupo-card{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:12px;overflow:hidden;}
+  .grupo-header{display:flex;justify-content:space-between;align-items:center;
     padding:12px 14px;border-bottom:1px solid var(--border);background:var(--card2);}
-  .prenda-id{color:var(--gold);font-size:14px;font-weight:700;letter-spacing:.1em;margin-right:8px;}
-  .prenda-tipo{color:var(--text);font-size:13px;}
-  .prenda-meta{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
-  .prenda-tienda{color:var(--muted);font-size:12px;}
-  .prenda-fecha{color:var(--faint);font-size:10px;}
-  .prenda-arreglos{padding:10px 14px;}
-  .prenda-ar-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--card2);font-size:13px;}
-  .prenda-ar-nombre{color:var(--muted);}
-  .prenda-ar-precio{color:var(--gold);font-size:12px;}
-  .prenda-notas{padding:8px 14px;font-size:12px;color:var(--dim);font-style:italic;border-top:1px solid var(--card2);}
-  .prenda-footer{display:flex;justify-content:space-between;align-items:center;
-    padding:10px 14px;border-top:1px solid var(--border);background:var(--card2);}
-  .prenda-total{font-size:13px;color:var(--text);}
-  .estado-badge{font-size:11px;padding:4px 10px;border-radius:20px;letter-spacing:.05em;}
-  .estado-Pendiente{background:#fff3ec;color:var(--alert);border:1px solid var(--alert);}
-  .estado-En.proceso{background:#141a1a;color:#6a9e9e;border:1px solid #6a9e9e;}
-  .estado-Listo{background:var(--greenbg);color:var(--green);border:1px solid var(--green);}
-  .estado-Entregado{background:#1a1815;color:var(--faint);border:1px solid var(--border);}
+  .grupo-num{color:var(--gold);font-size:15px;font-weight:700;letter-spacing:.1em;margin-right:8px;}
+  .grupo-tienda{color:var(--muted);font-size:12px;}
+  .grupo-fecha{color:var(--faint);font-size:10px;}
+  .prenda-bloque{padding:10px 14px;border-bottom:1px solid var(--card2);}
+  .prenda-tipo-label{font-size:11px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .ar-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px;border-bottom:1px solid var(--card2);}
+  .ar-nombre{color:var(--muted);flex:1;}
+  .ar-precio{color:var(--gold);font-size:12px;}
+  .prenda-subtotal{text-align:right;font-size:12px;color:var(--text);padding-top:6px;font-weight:700;}
+  .grupo-footer{display:flex;justify-content:space-between;align-items:center;
+    padding:10px 14px;border-top:1px solid var(--border);background:var(--card2);gap:8px;}
+  .grupo-total{font-size:14px;color:var(--text);font-weight:700;}
+  .estado-select{background:var(--bg);border:1px solid var(--border);border-radius:3px;
+    color:var(--text);padding:6px 10px;font-size:12px;font-family:Georgia,serif;cursor:pointer;outline:none;}
+  .borrar-btn{background:transparent;border:1px solid var(--alert);border-radius:4px;
+    color:var(--alert);padding:6px 10px;font-size:12px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap;}
 
   /* CONTROL */
-  .control-card{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;}
-  .control-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--card2);border-bottom:1px solid var(--border);}
-  .control-body{padding:12px 14px;}
-  .control-ar{font-size:13px;color:var(--muted);padding:4px 0;}
-  .control-notas{font-size:12px;color:var(--dim);font-style:italic;margin-top:6px;}
-  .control-footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);}
-  .ctrl-btn{flex:1;border:none;border-radius:4px;padding:10px;font-size:12px;font-family:Georgia,serif;cursor:pointer;letter-spacing:.05em;}
+  .check-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--card2);}
+  .check-box{width:22px;height:22px;border:2px solid var(--border);border-radius:4px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    font-size:14px;background:var(--bg);}
+  .check-box.checked{background:var(--greenbg);border-color:var(--green);color:var(--green);}
+  .check-nombre{font-size:13px;color:var(--muted);flex:1;}
+  .check-precio{font-size:12px;color:var(--gold);}
+  .ctrl-footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);}
+  .ctrl-btn{flex:1;border:none;border-radius:4px;padding:10px;font-size:12px;font-family:Georgia,serif;cursor:pointer;}
   .ctrl-ok{background:var(--greenbg);color:var(--green);border:1px solid var(--green);}
   .ctrl-inc{background:var(--alertbg);color:var(--alert);border:1px solid var(--alert);}
-  .ctrl-send{background:#14181a;color:#6a9e9e;border:1px solid #6a9e9e;}
+  .ctrl-send{background:#f0f5ff;color:#4a6a9e;border:1px solid #4a6a9e;}
   .ctrl-done{background:var(--card2);color:var(--faint);border:1px solid var(--border);cursor:default;}
 
-  /* CONTABILIDAD */
+  /* COBROS */
   .tienda-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
   .tienda-nombre{font-size:14px;color:var(--gold);font-weight:700;flex:1;}
   .tienda-count{font-size:11px;color:var(--dim);}
-  .tienda-total{font-size:16px;color:var(--text);font-weight:700;}
-  .cont-prenda{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--card2);}
-  .cont-prenda-id{font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:6px;}
+  .tienda-total-cobros{font-size:16px;color:var(--text);font-weight:700;}
+  .cont-grupo{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--card2);}
+  .cont-grupo-header{font-size:12px;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;display:flex;justify-content:space-between;}
+  .cont-prenda-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin:8px 0 4px;}
   .cont-ar-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px;}
   .cont-ar-nombre{color:var(--muted);flex:1;}
   .cont-precio{color:var(--gold);}
+  .cont-subtotal{text-align:right;font-size:12px;color:var(--text);font-weight:700;padding-top:4px;border-top:1px solid var(--card2);}
+  .cont-grupo-total{text-align:right;font-size:14px;color:var(--text);font-weight:700;margin-top:8px;padding-top:8px;border-top:2px solid var(--border);}
+  .tienda-total-box{background:#f0ebe0;border:1px solid var(--gold);border-radius:6px;
+    padding:14px 20px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .tienda-total-label{font-size:11px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;}
+  .tienda-total-value{font-size:22px;font-weight:700;color:var(--gold);}
   .manual-row{display:flex;align-items:center;gap:6px;}
   .precio-input{width:70px;text-align:right;padding:4px 8px;font-size:13px;border-color:var(--alert);}
   .eur-label{color:var(--dim);font-size:12px;}
-  .total-card{background:#1e1b14;border:1px solid var(--gold);border-radius:6px;
-    padding:18px 20px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
-  .total-label{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;}
-  .total-value{font-size:26px;font-weight:700;color:var(--gold);}
   .alerta-box{background:var(--alertbg);border:1px solid var(--alert);border-radius:4px;
     color:var(--alert);padding:12px 14px;font-size:13px;margin-top:12px;}
-
-  /* MISC */
-  .empty{text-align:center;color:var(--faint);padding:50px 20px;font-size:14px;font-style:italic;}
-  .search-row{display:flex;gap:8px;margin-bottom:12px;}
-  .search-row input{flex:1;}
   .alerta-small{color:var(--alert);font-size:12px;}
+
+  .empty{text-align:center;color:var(--faint);padding:50px 20px;font-size:14px;font-style:italic;}
   .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
-    background:var(--gold);color:#0f0e0c;padding:10px 24px;border-radius:20px;
+    background:var(--gold);color:#fff;padding:10px 24px;border-radius:20px;
     font-size:13px;font-weight:700;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
   .toast.show{opacity:1;}
   .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:500;
@@ -191,7 +183,6 @@
 
 <div class="main" id="main"></div>
 <div class="toast" id="toast"></div>
-
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text">Cargando datos…</div>
@@ -200,16 +191,13 @@
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1rv4abTaQRiCV487MlDU0YtvVrX2Wo3oDpp57XNdoreRRruKT3jnn09DTnEObskRI/exec";
 const SHEET_ID = "1ShNfWe2WYNDG9fm-EWeolcSpbkMEWVn29ZJhHnvXcco";
-const SHEET_NAME = "Prendas";
-
-// Columnas: Numero(0) Tienda(1) Fecha(2) TipoPrenda(3) Arreglos(4) Precios(5) Total(6) Notas(7) Estado(8) Control(9)
-const COL = {Numero:0,Tienda:1,Fecha:2,TipoPrenda:3,Arreglos:4,Precios:5,Total:6,Notas:7,Estado:8,Control:9};
-
-let tiendas = [];
 
 const TIPOS_BASE = ["Pantalón","Americana","Parka","Camisa","Vestido","Falda"];
-let tiposCustom = []; // tipos añadidos por el usuario
-let arreglosCustom = []; // arreglos personalizados guardados en Sheets
+let tiposCustom = [];
+let arreglosCustom = [];
+let tiendas = [];
+let grupos = []; // array de grupos del mes actual
+let checks = {}; // {grupoKey_prendaIdx_arregloIdx: true/false}
 
 const ARREGLOS = [
   {id:"p1",tipo:"Pantalón",nombre:"Bajo",precio:4.80},
@@ -253,204 +241,80 @@ const ARREGLOS = [
   {id:"f5",tipo:"Falda",nombre:"Largo con forro",precio:9.80},
 ];
 
-let vista = "entrada";
-let prendas = [];
-let formState = {tienda:"",numero:"",tipo:"",tipoCustom:"",arreglos:[],notas:""};
-let customPrecio = null;
+const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+// Form state
+let formState = {
+  tienda:"", numeroGrupo:"", fecha:hoyStr(),
+  tipo:"", tipoCustom:"", arreglos:[], notas:""
+};
 let customArreglo = "";
-let editPrecios = {};
-let filtroControl = {tienda:"",busqueda:""};
-let filtroRegistro = {tienda:"",estado:""};
+let customPrecio = null;
+let nuevaTienda = "";
+
+// Filtros
+let filtroRegistro = {tienda:"", estado:""};
+let filtroControl = {tienda:"", busqueda:""};
 let contMes = new Date().getMonth();
 let contAno = new Date().getFullYear();
-let prendasContabilidad = null;
-let contMesCargado = new Date().getMonth();
-let contAnoCargado = new Date().getFullYear();
-let nuevaTienda = "";
+let gruposContabilidad = null;
+let editPrecios = {};
+let vista = "entrada";
+
+function hoyStr() {
+  const h = new Date();
+  const d = String(h.getDate()).padStart(2,"0");
+  const m = String(h.getMonth()+1).padStart(2,"0");
+  const y = h.getFullYear();
+  return `${y}-${m}-${d}`;
+}
+
+function fechaDisplay(str) {
+  if (!str) return "";
+  if (str.includes("/")) return str;
+  const [y,m,d] = str.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function fechaParaOrden(str) {
+  if (!str) return 0;
+  if (str.includes("/")) {
+    const [d,m,y] = str.split("/");
+    return parseInt(y)*10000 + parseInt(m)*100 + parseInt(d);
+  }
+  return parseInt(str.replace(/-/g,""));
+}
+
+function grupoKey(g) {
+  return `${g.numeroGrupo}_${g.tienda}_${g.fecha}`;
+}
+
+function eur(n) {
+  if (n===null||n===undefined||isNaN(n)) return "—";
+  return Number(n).toFixed(2).replace(".",",")+" €";
+}
 
 // ---- API ----
 function apiCall(payload) {
   setSyncLoading();
   return new Promise((resolve) => {
-    const body = JSON.stringify({sheetId:SHEET_ID, sheet:SHEET_NAME, ...payload});
+    const body = JSON.stringify({sheetId:SHEET_ID, ...payload});
     const xhr = new XMLHttpRequest();
     xhr.open("POST", SCRIPT_URL, true);
-    xhr.setRequestHeader("Content-Type", "text/plain");
+    xhr.setRequestHeader("Content-Type","text/plain");
     xhr.onload = function() {
-      try {
-        const data = JSON.parse(xhr.responseText);
-        setSyncOk();
-        resolve(data);
-      } catch(e) {
-        setSyncOk();
-        resolve({success:true, data:[]});
-      }
+      try { const d = JSON.parse(xhr.responseText); setSyncOk(); resolve(d); }
+      catch(e) { setSyncOk(); resolve({success:true,data:[]}); }
     };
-    xhr.onerror = function() {
-      setSyncError();
-      resolve({success:false, data:[]});
-    };
+    xhr.onerror = function() { setSyncError(); resolve({success:false,data:[]}); };
     xhr.send(body);
   });
 }
 
-async function cargarTiendas() {
-  const data = await apiCall({action:"getTiendas"});
-  if (data.success && Array.isArray(data.data)) {
-    tiendas = data.data.filter(t => t && t.trim() !== "");
-  }
-}
-
-async function cargarTiposYArreglos() {
-  const [dataTipos, dataArreglos] = await Promise.all([
-    apiCall({action:"getTipos"}),
-    apiCall({action:"getArreglosCustom"})
-  ]);
-  if (dataTipos.success && Array.isArray(dataTipos.data)) {
-    tiposCustom = dataTipos.data.filter(t => t && t.trim() !== "");
-  }
-  if (dataArreglos.success && Array.isArray(dataArreglos.data)) {
-    arreglosCustom = dataArreglos.data;
-  }
-}
-
-function parsePrendas(data) {
-  return data.slice(1).map(r => ({
-    numero: r[COL.Numero],
-    tienda: r[COL.Tienda],
-    fecha: r[COL.Fecha],
-    tipo: r[COL.TipoPrenda],
-    arreglos: JSON.parse(r[COL.Arreglos] || "[]"),
-    precios: JSON.parse(r[COL.Precios] || "[]"),
-    total: parseFloat(r[COL.Total]) || 0,
-    notas: r[COL.Notas] || "",
-    estado: r[COL.Estado] || "Pendiente",
-    control: r[COL.Control] || "Pendiente",
-  }));
-}
-
-async function cargarPrendas() {
-  await Promise.all([cargarTiendas(), cargarTiposYArreglos()]);
-  const mes = new Date().getMonth() + 1;
-  const ano = new Date().getFullYear();
-  const data = await apiCall({action:"readMes", mes, ano});
-  if (data.success && data.data && data.data.length > 1) {
-    prendas = parsePrendas(data.data);
-  } else {
-    prendas = [];
-  }
-  document.getElementById("loadingOverlay").style.display = "none";
-  render();
-}
-
-async function cargarMes(mes, ano) {
-  showLoading();
-  const data = await apiCall({action:"readMes", mes:mes+1, ano});
-  hideLoading();
-  if (data.success && data.data && data.data.length > 1) {
-    return parsePrendas(data.data);
-  }
-  return [];
-}
-
-async function addTienda() {
-  const input = document.getElementById("nuevaTiendaInput");
-  const nombre = input ? input.value.trim() : nuevaTienda.trim();
-  if (!nombre) { alert("Escribe el nombre de la tienda."); return; }
-  if (tiendas.map(t=>t.toLowerCase()).includes(nombre.toLowerCase())) {
-    alert("Esa tienda ya existe."); return;
-  }
-  showLoading();
-  const res = await apiCall({action:"addTienda", nombre});
-  hideLoading();
-  if (res.success) {
-    tiendas.push(nombre);
-    nuevaTienda = "";
-    showToast("Tienda añadida ✓");
-    render();
-  } else {
-    alert("Error: " + (res.error || "No se pudo añadir"));
-  }
-}
-
-async function deleteTienda(nombre) {
-  if (!confirm("¿Seguro que quieres eliminar la tienda " + nombre + "?")) return;
-  showLoading();
-  const res = await apiCall({action:"deleteTienda", nombre});
-  hideLoading();
-  if (res.success) {
-    tiendas = tiendas.filter(t => t !== nombre);
-    showToast("Tienda eliminada ✓");
-    render();
-  } else {
-    alert("Error: " + (res.error || "No se pudo eliminar"));
-  }
-}
-
-function guardarPrenda() {
-  if (!formState.tienda || !formState.numero || !formState.tipo || formState.arreglos.length===0) return;
-  const hoy = new Date().toLocaleDateString("es-ES", {day:"2-digit", month:"2-digit", year:"numeric"});
-  const nombres = formState.arreglos.map(a => a.nombre);
-  const precios = formState.arreglos.map(a => a.precio !== null ? a.precio : null);
-  const total = precios.reduce((s,p) => s + (p||0), 0);
-  const row = [
-    formState.numero, formState.tienda, hoy, formState.tipo,
-    JSON.stringify(nombres), JSON.stringify(precios),
-    total, formState.notas, "Pendiente", "Pendiente"
-  ];
-
-  // Añadir a memoria instantáneamente
-  prendas.unshift({
-    numero:formState.numero, tienda:formState.tienda, fecha:hoy,
-    tipo:formState.tipo, arreglos:nombres, precios, total,
-    notas:formState.notas, estado:"Pendiente", control:"Pendiente"
-  });
-
-  // Resetear formulario inmediatamente
-  formState = {tienda:formState.tienda, numero:"", tipo:"", tipoCustom:"", arreglos:[], notas:""};
-  customArreglo = "";
-  customPrecio = null;
-  showToast("Prenda guardada ✓");
-  render();
-
-  // Enviar a Google Sheets en segundo plano
-  apiCall({action:"append", row}).then(res => {
-    if (!res.success) {
-      showToast("⚠ Error al sincronizar con Drive");
-    }
-  });
-}
-
-async function actualizarCampo(numero, tienda, campo, valor) {
-  const colMap = {estado: COL.Estado, control: COL.Control, precios: COL.Precios, total: COL.Total};
-  await apiCall({action:"update", id:numero, tienda, updates:{[campo]:valor}, colMap});
-  const p = prendas.find(x => String(x.numero)===String(numero) && x.tienda===tienda);
-  if (p) p[campo] = valor;
-  render();
-}
-
-// ---- UI helpers ----
-function eur(n) {
-  if (n===null||n===undefined||isNaN(n)) return "—";
-  return Number(n).toFixed(2).replace(".",",")+" €";
-}
-function setSyncLoading(){
-  document.getElementById("syncDot").className="sync-dot loading";
-  document.getElementById("syncText").textContent="Sincronizando…";
-}
-function setSyncOk(){
-  document.getElementById("syncDot").className="sync-dot ok";
-  document.getElementById("syncText").textContent="Guardado en Drive";
-}
-function setSyncError(){
-  document.getElementById("syncDot").className="sync-dot";
-  document.getElementById("syncText").textContent="Sin conexión";
-}
-function showToast(msg){
-  const t=document.getElementById("toast");
-  t.textContent=msg;t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),2500);
-}
+function setSyncLoading(){document.getElementById("syncDot").className="sync-dot loading";document.getElementById("syncText").textContent="Sincronizando…";}
+function setSyncOk(){document.getElementById("syncDot").className="sync-dot ok";document.getElementById("syncText").textContent="Guardado en Drive";}
+function setSyncError(){document.getElementById("syncDot").className="sync-dot";document.getElementById("syncText").textContent="Sin conexión";}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 function showLoading(){document.getElementById("loadingOverlay").style.display="flex";}
 function hideLoading(){document.getElementById("loadingOverlay").style.display="none";}
 
@@ -461,20 +325,54 @@ function setVista(v){
   render();
 }
 
-// ---- RENDER ----
-function render(){
-  const m = document.getElementById("main");
-  if (vista==="entrada") m.innerHTML = renderEntrada();
-  else if (vista==="registro") m.innerHTML = renderRegistro();
-  else if (vista==="control") m.innerHTML = renderControl();
-  else if (vista==="contabilidad") m.innerHTML = renderContabilidad();
-  else if (vista==="tiendas") m.innerHTML = renderTiendas();
-  bindEvents();
+// ---- CARGA INICIAL ----
+async function cargarTiendas() {
+  const d = await apiCall({action:"getTiendas"});
+  if (d.success && Array.isArray(d.data)) tiendas = d.data.filter(t=>t&&t.trim()!=="");
 }
 
-// ===== ENTRADA =====
-function renderEntrada(){
-  const arreglosPorTipo = ARREGLOS.filter(a=>a.tipo===formState.tipo);
+async function cargarTiposYArreglos() {
+  const [dT, dA] = await Promise.all([apiCall({action:"getTipos"}), apiCall({action:"getArreglosCustom"})]);
+  if (dT.success && Array.isArray(dT.data)) tiposCustom = dT.data.filter(t=>t&&t.trim()!=="");
+  if (dA.success && Array.isArray(dA.data)) arreglosCustom = dA.data;
+}
+
+function parseGrupos(rows) {
+  return rows.map(r => ({
+    numeroGrupo: r[0],
+    tienda: r[1],
+    fecha: r[2],
+    prendas: JSON.parse(r[3] || "[]"),
+    totalGrupo: parseFloat(r[4]) || 0,
+    estado: r[5] || "Pendiente",
+    notas: r[6] || ""
+  })).sort((a,b) => fechaParaOrden(b.fecha) - fechaParaOrden(a.fecha));
+}
+
+async function cargarGrupos() {
+  await Promise.all([cargarTiendas(), cargarTiposYArreglos()]);
+  const mes = new Date().getMonth()+1;
+  const ano = new Date().getFullYear();
+  const d = await apiCall({action:"readMes", mes, ano});
+  grupos = (d.success && d.data && d.data.length > 0) ? parseGrupos(d.data) : [];
+  document.getElementById("loadingOverlay").style.display="none";
+  render();
+}
+
+async function cargarContabilidad() {
+  const esActual = contMes === new Date().getMonth() && contAno === new Date().getFullYear();
+  if (esActual) { gruposContabilidad = null; render(); return; }
+  showLoading();
+  const d = await apiCall({action:"readMes", mes:contMes+1, ano:contAno});
+  hideLoading();
+  gruposContabilidad = (d.success && d.data && d.data.length > 0) ? parseGrupos(d.data) : [];
+  render();
+}
+
+// ---- ENTRADA ----
+function renderEntrada() {
+  const arregloPorTipo = ARREGLOS.filter(a=>a.tipo===formState.tipo);
+  const customDelTipo = arreglosCustom.filter(a=>a.tipo===formState.tipo);
   const hayArreglos = formState.arreglos.length > 0;
   const totalEstimado = formState.arreglos.reduce((s,a)=>s+(a.precio||0),0);
 
@@ -491,10 +389,15 @@ function renderEntrada(){
         </select>
       </div>
       <div class="field">
-        <label class="label">Nº de prenda</label>
-        <input type="text" placeholder="Ej: 4521" value="${formState.numero}"
-          oninput="formState.numero=this.value">
+        <label class="label">Nº de grupo</label>
+        <input type="text" placeholder="Ej: 4521" value="${formState.numeroGrupo}"
+          oninput="formState.numeroGrupo=this.value">
       </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Fecha de entrada</label>
+      <input type="date" value="${formState.fecha}" onchange="formState.fecha=this.value">
     </div>
 
     <div class="field">
@@ -507,13 +410,13 @@ function renderEntrada(){
       </select>
     </div>
 
-    ${formState.tipo === "Otra" ? `
+    ${formState.tipo==="Otra" ? `
     <div class="field">
       <label class="label">Nombre del nuevo tipo</label>
       <div class="custom-row">
         <input type="text" placeholder="Ej: Traje, Abrigo…" id="tipoCustomInput"
           value="${formState.tipoCustom||''}" oninput="formState.tipoCustom=this.value">
-        <button class="add-btn" onclick="guardarTipoCustom()">+ Guardar tipo</button>
+        <button class="add-btn" onclick="guardarTipoCustom()">+ Guardar</button>
       </div>
     </div>` : ""}
 
@@ -521,16 +424,16 @@ function renderEntrada(){
     <div class="field">
       <label class="label">Arreglos</label>
       <div class="arreglos-grid">
-        ${arreglosPorTipo.map(ar=>{
+        ${arregloPorTipo.map(ar=>{
           const sel = formState.arreglos.find(a=>a.id===ar.id);
           return `<button class="arreglo-btn ${sel?"sel":""}" onclick="toggleArreglo('${ar.id}')">
             <span>${ar.nombre}</span>
             <span class="arreglo-precio">${eur(ar.precio)}</span>
           </button>`;
         }).join("")}
-        ${arreglosCustom.filter(a=>a.tipo===formState.tipo).map(a=>{
-          const idCustom = "custom_saved_"+a.nombre;
-          const sel = formState.arreglos.find(x=>x.id===idCustom);
+        ${customDelTipo.map(a=>{
+          const idC = "cs_"+a.nombre;
+          const sel = formState.arreglos.find(x=>x.id===idC);
           return `<button class="arreglo-btn ${sel?"sel":""}" onclick="toggleArregloCustomSaved('${a.nombre}',${a.precio},'${formState.tipo}')">
             <span>${a.nombre}</span>
             <span class="arreglo-precio">${eur(a.precio)}</span>
@@ -540,7 +443,7 @@ function renderEntrada(){
     </div>` : ""}
 
     <div class="field">
-      <label class="label">Arreglo nuevo (se guardará para siempre)</label>
+      <label class="label">Arreglo nuevo (se guardará para este tipo)</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <input type="text" style="flex:2;min-width:140px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:11px 12px;font-size:15px;font-family:Georgia,serif;outline:none;"
           placeholder="Nombre del arreglo…" id="customInput"
@@ -558,110 +461,133 @@ function renderEntrada(){
       ${formState.arreglos.map((a,i)=>`
         <div class="resumen-item">
           <span class="resumen-nombre">${a.nombre}</span>
-          ${a.precio!==null ? `<span class="resumen-precio">${eur(a.precio)}</span>` : `<span class="alerta-price">⚠ Sin precio</span>`}
+          ${a.precio!==null&&a.precio!==undefined ? `<span class="resumen-precio">${eur(a.precio)}</span>` : `<span class="alerta-price">⚠ Sin precio</span>`}
           <button class="remove-btn" onclick="removeArreglo(${i})">×</button>
         </div>
       `).join("")}
-      <div class="resumen-total">Total: ${eur(totalEstimado)}</div>
+      <div class="resumen-total">Total estimado: ${eur(totalEstimado)}</div>
     </div>` : ""}
 
     <div class="field">
       <label class="label">Notas especiales</label>
-      <textarea placeholder="Ej: manga derecha 63cm, manga izquierda 65cm…" rows="3"
+      <textarea placeholder="Ej: manga derecha 63cm, devolver tela…" rows="3"
         oninput="formState.notas=this.value">${formState.notas}</textarea>
     </div>
 
     <button class="primary-btn"
-      ${(!formState.tienda||!formState.numero||!formState.tipo||formState.arreglos.length===0)?"disabled":""}
+      ${(!formState.tienda||!formState.numeroGrupo||!formState.tipo||formState.tipo==="Otra"||formState.arreglos.length===0)?"disabled":""}
       onclick="guardarPrenda()">
-      Guardar prenda
+      Guardar prenda en grupo #${formState.numeroGrupo||"—"}
     </button>
-  </div>
-
-`;
+  </div>`;
 }
 
-function toggleArreglo(id){
+function toggleArreglo(id) {
   const ar = ARREGLOS.find(a=>a.id===id);
   const idx = formState.arreglos.findIndex(a=>a.id===id);
   if(idx>=0) formState.arreglos.splice(idx,1);
   else formState.arreglos.push({id:ar.id,nombre:ar.nombre,precio:ar.precio});
   render();
 }
-function addCustom(){
+
+function toggleArregloCustomSaved(nombre, precio, tipo) {
+  const idC = "cs_"+nombre;
+  const idx = formState.arreglos.findIndex(a=>a.id===idC);
+  if(idx>=0) formState.arreglos.splice(idx,1);
+  else formState.arreglos.push({id:idC, nombre, precio});
+  render();
+}
+
+function removeArreglo(i) { formState.arreglos.splice(i,1); render(); }
+
+function addCustom() {
   if(!customArreglo.trim()) return;
-  if(!formState.tipo || formState.tipo==="Otra") {
-    alert("Selecciona primero el tipo de prenda.");
-    return;
-  }
+  if(!formState.tipo || formState.tipo==="Otra") { alert("Selecciona primero el tipo de prenda."); return; }
   const nombre = customArreglo.trim();
   const precio = customPrecio;
   const tipo = formState.tipo;
-  const idCustom = "custom_saved_"+nombre;
-
-  // Añadir al formulario actual
-  formState.arreglos.push({id:idCustom, nombre, precio});
-  customArreglo = "";
-  customPrecio = null;
-
-  // Guardar en Sheets en segundo plano
-  apiCall({action:"addArregloCustom", tipo, nombre, precio}).then(res => {
-    if (res.success) {
-      arreglosCustom.push({tipo, nombre, precio});
-      showToast("Arreglo guardado ✓");
-    } else if (res.error && res.error.includes("ya existe")) {
-      showToast("Arreglo ya registrado");
-    }
+  const idC = "cs_"+nombre;
+  formState.arreglos.push({id:idC, nombre, precio});
+  customArreglo=""; customPrecio=null;
+  apiCall({action:"addArregloCustom", tipo, nombre, precio}).then(res=>{
+    if(res.success) { arreglosCustom.push({tipo,nombre,precio}); showToast("Arreglo guardado ✓"); }
+    else if(res.error&&res.error.includes("ya existe")) showToast("Arreglo ya registrado");
   });
   render();
 }
 
-function toggleArregloCustomSaved(nombre, precio, tipo){
-  const idCustom = "custom_saved_"+nombre;
-  const idx = formState.arreglos.findIndex(a=>a.id===idCustom);
-  if(idx>=0) formState.arreglos.splice(idx,1);
-  else formState.arreglos.push({id:idCustom, nombre, precio});
-  render();
-}
-
-async function guardarTipoCustom(){
+async function guardarTipoCustom() {
   const nombre = formState.tipoCustom ? formState.tipoCustom.trim() : "";
   if(!nombre){ alert("Escribe el nombre del nuevo tipo."); return; }
-  if(TIPOS_BASE.map(t=>t.toLowerCase()).includes(nombre.toLowerCase()) ||
+  if(TIPOS_BASE.map(t=>t.toLowerCase()).includes(nombre.toLowerCase())||
      tiposCustom.map(t=>t.toLowerCase()).includes(nombre.toLowerCase())){
     alert("Ese tipo ya existe."); return;
   }
   showLoading();
   const res = await apiCall({action:"addTipo", nombre});
   hideLoading();
-  if(res.success){
-    tiposCustom.push(nombre);
-    formState.tipo = nombre;
-    formState.tipoCustom = "";
-    formState.arreglos = [];
-    showToast("Tipo guardado ✓");
-    render();
-  } else {
-    alert("Error: " + (res.error||"No se pudo guardar"));
-  }
+  if(res.success){ tiposCustom.push(nombre); formState.tipo=nombre; formState.tipoCustom=""; formState.arreglos=[]; showToast("Tipo guardado ✓"); render(); }
+  else alert("Error: "+(res.error||"No se pudo guardar"));
 }
-function removeArreglo(i){
-  formState.arreglos.splice(i,1);
+
+function guardarPrenda() {
+  if(!formState.tienda||!formState.numeroGrupo||!formState.tipo||formState.tipo==="Otra"||formState.arreglos.length===0) return;
+
+  const fecha = fechaDisplay(formState.fecha);
+  const nuevaPrenda = {
+    tipo: formState.tipo,
+    arreglos: formState.arreglos.map(a=>a.nombre),
+    precios: formState.arreglos.map(a=>a.precio!==null?a.precio:null),
+    notas: formState.notas
+  };
+
+  // Buscar si ya existe un grupo con ese número, tienda y fecha
+  const grupoExistente = grupos.find(g =>
+    String(g.numeroGrupo)===String(formState.numeroGrupo) &&
+    g.tienda===formState.tienda &&
+    g.fecha===fecha
+  );
+
+  if(grupoExistente) {
+    // Añadir prenda al grupo existente
+    grupoExistente.prendas.push(nuevaPrenda);
+    grupoExistente.totalGrupo = grupoExistente.prendas.reduce((s,p)=>
+      s+(p.precios||[]).reduce((s2,pr)=>s2+(pr||0),0),0);
+    apiCall({action:"addPrendaAGrupo", numeroGrupo:formState.numeroGrupo, tienda:formState.tienda, fecha, prenda:nuevaPrenda});
+    showToast("Prenda añadida al grupo ✓");
+  } else {
+    // Crear nuevo grupo
+    const nuevoGrupo = {
+      numeroGrupo: formState.numeroGrupo,
+      tienda: formState.tienda,
+      fecha,
+      prendas: [nuevaPrenda],
+      totalGrupo: nuevaPrenda.precios.reduce((s,p)=>s+(p||0),0),
+      estado: "Pendiente",
+      notas: ""
+    };
+    grupos.unshift(nuevoGrupo);
+    apiCall({action:"appendGrupo", ...nuevoGrupo});
+    showToast("Grupo creado ✓");
+  }
+
+  // Resetear solo tipo, arreglos y notas — mantener tienda, número y fecha
+  formState = {...formState, tipo:"", tipoCustom:"", arreglos:[], notas:""};
+  customArreglo=""; customPrecio=null;
   render();
 }
 
-
-// ===== REGISTRO =====
-function renderRegistro(){
-  const filtradas = prendas.filter(p=>{
-    if(filtroRegistro.tienda && p.tienda!==filtroRegistro.tienda) return false;
-    if(filtroRegistro.estado && p.estado!==filtroRegistro.estado) return false;
+// ---- REGISTRO ----
+function renderRegistro() {
+  const filtrados = grupos.filter(g=>{
+    if(filtroRegistro.tienda && g.tienda!==filtroRegistro.tienda) return false;
+    if(filtroRegistro.estado && g.estado!==filtroRegistro.estado) return false;
     return true;
   });
 
   return `
   <div class="card">
-    <div class="card-title">Registro de prendas</div>
+    <div class="card-title">Registro de grupos</div>
     <div class="grid2">
       <div class="field">
         <label class="label">Tienda</label>
@@ -680,69 +606,82 @@ function renderRegistro(){
     </div>
   </div>
 
-  ${filtradas.length===0 ? `<div class="empty">No hay prendas.</div>` :
-    filtradas.map(p=>{
-      const hayPendiente = p.precios.some(x=>x===null);
-      const total = p.precios.reduce((s,x)=>s+(x||0),0);
-      const estadoClass = p.estado.replace(" ",".");
-      return `
-      <div class="prenda-card">
-        <div class="prenda-header">
-          <div>
-            <span class="prenda-id">#${p.numero}</span>
-            <span class="prenda-tipo">${p.tipo}</span>
-          </div>
-          <div class="prenda-meta">
-            <span class="prenda-tienda">${p.tienda}</span>
-            <span class="prenda-fecha">${p.fecha}</span>
-          </div>
-        </div>
-        <div class="prenda-arreglos">
-          ${p.arreglos.map((ar,i)=>`
-            <div class="prenda-ar-row">
-              <span class="prenda-ar-nombre">${ar}</span>
-              <div style="display:flex;align-items:center;gap:8px;">
-                ${p.precios[i]!==null ? `<span class="prenda-ar-precio">${eur(p.precios[i])}</span>` : `<span class="alerta-price">⚠ Sin precio</span>`}
-                <button onclick="deleteArreglo('${p.numero}','${p.tienda}',${i})"
-                  style="background:transparent;border:none;color:#c05a20;
-                  cursor:pointer;font-size:14px;padding:2px 4px;">✕</button>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-        ${p.notas ? `<div class="prenda-notas">📝 ${p.notas}</div>` : ""}
-        <div class="prenda-footer">
-          <div class="prenda-total">
-            ${hayPendiente?`<span class="alerta-small">⚠ Parcial: </span>`:""}
-            <strong>${eur(total)}</strong>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <select class="estado-badge estado-${estadoClass}"
-              onchange="actualizarCampo('${p.numero}','${p.tienda}','estado',this.value)">
-              <option ${p.estado==="Pendiente"?"selected":""}>Pendiente</option>
-              <option ${p.estado==="En proceso"?"selected":""}>En proceso</option>
-              <option ${p.estado==="Listo"?"selected":""}>Listo</option>
-              <option ${p.estado==="Entregado"?"selected":""}>Entregado</option>
-            </select>
-            <button onclick="borrarPrenda('${p.numero}','${p.tienda}')"
-              style="background:transparent;border:1px solid #c05a20;border-radius:4px;
-              color:#c05a20;padding:6px 10px;font-size:12px;cursor:pointer;
-              font-family:Georgia,serif;white-space:nowrap;">
-              🗑️ Borrar
-            </button>
-          </div>
-        </div>
-      </div>`;
-    }).join("")
+  ${filtrados.length===0 ? `<div class="empty">No hay grupos registrados.</div>` :
+    filtrados.map(g => renderGrupoCard(g, "registro")).join("")
   }`;
 }
 
-// ===== CONTROL =====
-function renderControl(){
-  const filtradas = prendas.filter(p=>{
-    if(filtroControl.tienda && p.tienda!==filtroControl.tienda) return false;
-    if(filtroControl.busqueda && !String(p.numero).includes(filtroControl.busqueda)) return false;
-    if(p.estado==="Entregado") return false;
+function renderGrupoCard(g, modo) {
+  const key = grupoKey(g);
+  return `
+  <div class="grupo-card">
+    <div class="grupo-header">
+      <div>
+        <span class="grupo-num">#${g.numeroGrupo}</span>
+        <span style="font-size:12px;color:var(--muted);">${g.prendas.length} prenda${g.prendas.length>1?"s":""}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+        <span class="grupo-tienda">${g.tienda}</span>
+        <span class="grupo-fecha">${g.fecha}</span>
+      </div>
+    </div>
+    ${g.prendas.map((p,pi)=>{
+      const subtotal = (p.precios||[]).reduce((s,pr)=>s+(pr||0),0);
+      return `
+      <div class="prenda-bloque">
+        <div class="prenda-tipo-label">${p.tipo}</div>
+        ${(p.arreglos||[]).map((ar,ai)=>`
+          <div class="ar-row">
+            <span class="ar-nombre">${ar}</span>
+            ${p.precios&&p.precios[ai]!==null&&p.precios[ai]!==undefined
+              ? `<span class="ar-precio">${eur(p.precios[ai])}</span>`
+              : `<span class="alerta-price">⚠ Sin precio</span>`}
+          </div>
+        `).join("")}
+        ${p.notas?`<div style="font-size:11px;color:var(--dim);font-style:italic;padding-top:4px;">📝 ${p.notas}</div>`:""}
+        <div class="prenda-subtotal">Subtotal: ${eur(subtotal)}</div>
+      </div>`;
+    }).join("")}
+    <div class="grupo-footer">
+      <div class="grupo-total">Total: ${eur(g.totalGrupo)}</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select class="estado-select" onchange="actualizarEstado('${key}',this.value)">
+          <option ${g.estado==="Pendiente"?"selected":""}>Pendiente</option>
+          <option ${g.estado==="En proceso"?"selected":""}>En proceso</option>
+          <option ${g.estado==="Listo"?"selected":""}>Listo</option>
+          <option ${g.estado==="Entregado"?"selected":""}>Entregado</option>
+        </select>
+        <button class="borrar-btn" onclick="borrarGrupo('${key}')">🗑️</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function actualizarEstado(key, estado) {
+  const g = grupos.find(x=>grupoKey(x)===key);
+  if(!g) return;
+  g.estado = estado;
+  apiCall({action:"updateGrupo", numeroGrupo:g.numeroGrupo, tienda:g.tienda, fecha:g.fecha, estado});
+  render();
+}
+
+async function borrarGrupo(key) {
+  if(!confirm("¿Borrar este grupo completo?")) return;
+  const g = grupos.find(x=>grupoKey(x)===key);
+  if(!g) return;
+  showLoading();
+  const res = await apiCall({action:"deleteGrupo", numeroGrupo:g.numeroGrupo, tienda:g.tienda, fecha:g.fecha});
+  hideLoading();
+  if(res.success) { grupos = grupos.filter(x=>grupoKey(x)!==key); showToast("Grupo borrado ✓"); render(); }
+  else alert("Error al borrar.");
+}
+
+// ---- CONTROL ----
+function renderControl() {
+  const filtrados = grupos.filter(g=>{
+    if(g.estado==="Entregado") return false;
+    if(filtroControl.tienda && g.tienda!==filtroControl.tienda) return false;
+    if(filtroControl.busqueda && !String(g.numeroGrupo).includes(filtroControl.busqueda)) return false;
     return true;
   });
 
@@ -756,67 +695,95 @@ function renderControl(){
         ${tiendas.map(t=>`<option value="${t}" ${filtroControl.tienda===t?"selected":""}>${t}</option>`).join("")}
       </select>
     </div>
-    <div class="search-row">
-      <input type="text" placeholder="Buscar por número…" value="${filtroControl.busqueda}"
+    <div class="field">
+      <label class="label">Buscar por número</label>
+      <input type="text" placeholder="Ej: 4521" value="${filtroControl.busqueda}"
         oninput="filtroControl.busqueda=this.value;render()">
     </div>
   </div>
 
-  ${filtradas.length===0 ? `<div class="empty">No hay prendas pendientes de control.</div>` :
-    filtradas.map(p=>`
-    <div class="control-card">
-      <div class="control-header">
-        <div>
-          <span class="prenda-id">#${p.numero}</span>
-          <span class="prenda-tipo">${p.tipo}</span>
+  ${filtrados.length===0 ? `<div class="empty">No hay grupos pendientes de control.</div>` :
+    filtrados.map(g=>{
+      const key = grupoKey(g);
+      const todosChecked = g.prendas.every((p,pi)=>
+        (p.arreglos||[]).every((_,ai)=>checks[key+"_"+pi+"_"+ai])
+      );
+      return `
+      <div class="grupo-card">
+        <div class="grupo-header">
+          <div>
+            <span class="grupo-num">#${g.numeroGrupo}</span>
+            <span style="font-size:12px;color:var(--muted);">${g.prendas.length} prenda${g.prendas.length>1?"s":""}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+            <span class="grupo-tienda">${g.tienda}</span>
+            <span class="grupo-fecha">${g.fecha}</span>
+          </div>
         </div>
-        <div class="prenda-meta">
-          <span class="prenda-tienda">${p.tienda}</span>
-          <span class="prenda-fecha">${p.fecha}</span>
+        ${g.prendas.map((p,pi)=>`
+          <div class="prenda-bloque">
+            <div class="prenda-tipo-label">${p.tipo}</div>
+            ${(p.arreglos||[]).map((ar,ai)=>{
+              const ck = checks[key+"_"+pi+"_"+ai];
+              return `
+              <div class="check-row">
+                <div class="check-box ${ck?"checked":""}" onclick="toggleCheck('${key}',${pi},${ai})">
+                  ${ck?"✓":""}
+                </div>
+                <span class="check-nombre">${ar}</span>
+                ${p.precios&&p.precios[ai]!==null?`<span class="check-precio">${eur(p.precios[ai])}</span>`:""}
+              </div>`;
+            }).join("")}
+            ${p.notas?`<div style="font-size:11px;color:var(--dim);font-style:italic;padding-top:4px;">📝 ${p.notas}</div>`:""}
+          </div>
+        `).join("")}
+        <div class="ctrl-footer">
+          ${todosChecked ? `
+            <button class="ctrl-btn ctrl-ok ctrl-done">✓ Todo revisado</button>
+            <button class="ctrl-btn ctrl-send" onclick="marcarEnviado('${key}')">Marcar enviado</button>
+          ` : `
+            <button class="ctrl-btn ctrl-ok" onclick="marcarTodo('${key}',true)">✓ Marcar todo</button>
+            <button class="ctrl-btn ctrl-inc" onclick="marcarTodo('${key}',false)">↺ Desmarcar todo</button>
+          `}
         </div>
-      </div>
-      <div class="control-body">
-        ${p.arreglos.map(ar=>`<div class="control-ar">· ${ar}</div>`).join("")}
-        ${p.notas?`<div class="control-notas">📝 ${p.notas}</div>`:""}
-      </div>
-      <div class="control-footer">
-        ${p.control==="OK" ? `
-          <button class="ctrl-btn ctrl-done">✓ Correcto</button>
-          <button class="ctrl-btn ctrl-send" onclick="actualizarCampo('${p.numero}','${p.tienda}','estado','Entregado');actualizarCampo('${p.numero}','${p.tienda}','control','Enviado')">Marcar enviado</button>
-        ` : p.control==="Incidencia" ? `
-          <button class="ctrl-btn ctrl-inc ctrl-done">⚠ Incidencia</button>
-          <button class="ctrl-btn ctrl-ok" onclick="actualizarCampo('${p.numero}','${p.tienda}','control','OK')">Resolver ✓</button>
-        ` : `
-          <button class="ctrl-btn ctrl-ok" onclick="actualizarCampo('${p.numero}','${p.tienda}','control','OK');actualizarCampo('${p.numero}','${p.tienda}','estado','Listo')">✓ Correcto</button>
-          <button class="ctrl-btn ctrl-inc" onclick="actualizarCampo('${p.numero}','${p.tienda}','control','Incidencia')">⚠ Incidencia</button>
-        `}
-      </div>
-    </div>`).join("")
+      </div>`;
+    }).join("")
   }`;
 }
 
-// ===== CONTABILIDAD =====
-function renderContabilidad(){
-  const MESES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+function toggleCheck(key, pi, ai) {
+  const ck = key+"_"+pi+"_"+ai;
+  checks[ck] = !checks[ck];
+  render();
+}
 
-  // Si el mes seleccionado es el actual usar prendas en memoria
-  // Si es otro mes usar prendasContabilidad que se carga bajo demanda
-  const esActual = contMes === new Date().getMonth() && contAno === new Date().getFullYear();
-  const fuenteDatos = esActual ? prendas : (prendasContabilidad || []);
-  const del_mes = fuenteDatos;
+function marcarTodo(key, valor) {
+  const g = grupos.find(x=>grupoKey(x)===key);
+  if(!g) return;
+  g.prendas.forEach((p,pi)=>(p.arreglos||[]).forEach((_,ai)=>{ checks[key+"_"+pi+"_"+ai]=valor; }));
+  render();
+}
+
+function marcarEnviado(key) {
+  const g = grupos.find(x=>grupoKey(x)===key);
+  if(!g) return;
+  g.estado = "Entregado";
+  apiCall({action:"updateGrupo", numeroGrupo:g.numeroGrupo, tienda:g.tienda, fecha:g.fecha, estado:"Entregado"});
+  showToast("Marcado como enviado ✓");
+  render();
+}
+
+// ---- COBROS ----
+function renderContabilidad() {
+  const esActual = contMes===new Date().getMonth() && contAno===new Date().getFullYear();
+  const fuente = esActual ? grupos : (gruposContabilidad||[]);
 
   const porTienda = {};
-  del_mes.forEach(p=>{
-    if(!porTienda[p.tienda]) porTienda[p.tienda]={prendas:[],total:0,hayPendiente:false};
-    const precios = p.precios.map((pr,i)=>{
-      const key=`${p.numero}_${p.tienda}_${i}`;
-      return editPrecios[key]!==undefined ? parseFloat(editPrecios[key]) : pr;
-    });
-    const total = precios.reduce((s,x)=>s+(isNaN(x)||x===null?0:x),0);
-    const hayPendiente = precios.some(x=>x===null||isNaN(x));
-    porTienda[p.tienda].prendas.push({...p,preciosEfectivos:precios});
-    porTienda[p.tienda].total += total;
-    if(hayPendiente) porTienda[p.tienda].hayPendiente=true;
+  fuente.forEach(g=>{
+    if(!porTienda[g.tienda]) porTienda[g.tienda]={grupos:[],total:0,hayPendiente:false};
+    porTienda[g.tienda].grupos.push(g);
+    porTienda[g.tienda].total += g.totalGrupo;
+    if(g.prendas.some(p=>(p.precios||[]).some(pr=>pr===null))) porTienda[g.tienda].hayPendiente=true;
   });
 
   const hayPendienteGlobal = Object.values(porTienda).some(t=>t.hayPendiente);
@@ -841,97 +808,54 @@ function renderContabilidad(){
     ${hayPendienteGlobal?`<div class="alerta-box">⚠ Hay arreglos sin precio. Introdúcelos manualmente abajo.</div>`:""}
   </div>
 
-  ${Object.keys(porTienda).length===0 ? `<div class="empty">No hay prendas en ${MESES[contMes]} ${contAno}.</div>` : `
-    ${Object.entries(porTienda).map(([tienda,data])=>`
+  ${Object.keys(porTienda).length===0 ? `<div class="empty">No hay datos en ${MESES[contMes]} ${contAno}.</div>` :
+    Object.entries(porTienda).map(([tienda,data])=>`
     <div class="card">
       <div class="tienda-header">
         <span class="tienda-nombre">${tienda}</span>
-        <span class="tienda-count">${data.prendas.length} prenda${data.prendas.length>1?"s":""}</span>
-        <span class="tienda-total">${data.hayPendiente?`<span class="alerta-small">⚠ </span>`:""}${eur(data.total)}</span>
+        <span class="tienda-count">${data.grupos.length} grupo${data.grupos.length>1?"s":""}</span>
       </div>
-      ${data.prendas.map(p=>`
-      <div class="cont-prenda">
-        <div class="cont-prenda-id">#${p.numero} · ${p.tipo} · ${p.fecha}</div>
-        ${p.arreglos.map((ar,i)=>{
-          const key=`${p.numero}_${p.tienda}_${i}`;
-          const precio = p.preciosEfectivos[i];
-          return `<div class="cont-ar-row">
-            <span class="cont-ar-nombre">${ar}</span>
-            ${precio!==null&&!isNaN(precio) ? `<span class="cont-precio">${eur(precio)}</span>` : `
-            <div class="manual-row">
-              <span class="alerta-price">⚠</span>
-              <input class="precio-input" type="number" step="0.10" placeholder="0,00"
-                value="${editPrecios[key]||""}"
-                oninput=\"editPrecios['${key}']=this.value\" onchange=\"render()\">
-              <span class="eur-label">€</span>
-            </div>`}
-          </div>`;
-        }).join("")}
-      </div>`).join("")}
-    </div>`).join("")}
-
-  `}`;
+      ${data.grupos.map(g=>`
+        <div class="cont-grupo">
+          <div class="cont-grupo-header">
+            <span>#${g.numeroGrupo} · ${g.fecha}</span>
+            <span>${g.prendas.length} prenda${g.prendas.length>1?"s":""}</span>
+          </div>
+          ${g.prendas.map((p,pi)=>{
+            const subtotal = (p.precios||[]).reduce((s,pr)=>s+(isNaN(pr)||pr===null?0:pr),0);
+            return `
+            <div class="cont-prenda-label">${p.tipo}</div>
+            ${(p.arreglos||[]).map((ar,ai)=>{
+              const key = g.numeroGrupo+"_"+g.tienda+"_"+g.fecha+"_"+pi+"_"+ai;
+              const precio = editPrecios[key]!==undefined ? parseFloat(editPrecios[key]) : (p.precios&&p.precios[ai]);
+              return `<div class="cont-ar-row">
+                <span class="cont-ar-nombre">${ar}</span>
+                ${precio!==null&&precio!==undefined&&!isNaN(precio)
+                  ? `<span class="cont-precio">${eur(precio)}</span>`
+                  : `<div class="manual-row">
+                      <span class="alerta-price">⚠</span>
+                      <input class="precio-input" type="number" step="0.10" placeholder="0,00"
+                        value="${editPrecios[key]||''}"
+                        oninput="editPrecios['${key}']=this.value" onchange="render()">
+                      <span class="eur-label">€</span>
+                    </div>`}
+              </div>`;
+            }).join("")}
+            <div class="cont-subtotal">Subtotal ${p.tipo}: ${eur(subtotal)}</div>`;
+          }).join("")}
+          <div class="cont-grupo-total">Total grupo #${g.numeroGrupo}: ${eur(g.totalGrupo)}</div>
+        </div>
+      `).join("")}
+      <div class="tienda-total-box">
+        <span class="tienda-total-label">Total ${tienda}</span>
+        <span class="tienda-total-value">${eur(data.total)}</span>
+      </div>
+    </div>`).join("")
+  }`;
 }
 
-async function deleteArreglo(numero, tienda, idx) {
-  if (!confirm("¿Eliminar este arreglo?")) return;
-  showLoading();
-  const res = await apiCall({action:"deleteArreglo", numero, tienda, idx});
-  hideLoading();
-  if (res.success) {
-    const p = prendas.find(x => String(x.numero)===String(numero) && x.tienda===tienda);
-    if (p) {
-      p.arreglos.splice(idx, 1);
-      p.precios.splice(idx, 1);
-      p.total = p.precios.reduce((s,x) => s + (x||0), 0);
-    }
-    showToast("Arreglo eliminado ✓");
-    render();
-  } else {
-    alert("Error al eliminar. Inténtalo de nuevo.");
-  }
-}
-
-async function borrarPrenda(numero, tienda) {
-  if (!confirm("¿Seguro que quieres borrar la prenda #" + numero + "?")) return;
-  showLoading();
-  const res = await apiCall({action:"delete", numero, tienda});
-  hideLoading();
-  if (res.success) {
-    prendas = prendas.filter(p => !(String(p.numero)===String(numero) && p.tienda===tienda));
-    showToast("Prenda borrada ✓");
-    render();
-  } else {
-    alert("Error al borrar. Inténtalo de nuevo.");
-  }
-}
-
-async function eliminarArregloCustom(tipo, nombre) {
-  if (!confirm("¿Eliminar el arreglo " + nombre + "?")) return;
-  showLoading();
-  const res = await apiCall({action:"deleteArregloCustom", tipo, nombre});
-  hideLoading();
-  if (res.success) {
-    arreglosCustom = arreglosCustom.filter(a => !(a.tipo===tipo && a.nombre===nombre));
-    showToast("Arreglo eliminado ✓");
-    render();
-  } else {
-    alert("Error: " + (res.error||"No se pudo eliminar"));
-  }
-}
-
-async function cargarContabilidad() {
-  const esActual = contMes === new Date().getMonth() && contAno === new Date().getFullYear();
-  if (esActual) {
-    prendasContabilidad = null;
-    render();
-    return;
-  }
-  prendasContabilidad = await cargarMes(contMes, contAno);
-  render();
-}
-
-function renderTiendas(){
+// ---- TIENDAS ----
+function renderTiendas() {
   return `
   <div class="card">
     <div class="card-title">Gestión de tiendas</div>
@@ -946,47 +870,75 @@ function renderTiendas(){
     </div>
   </div>
 
-  ${tiendas.length === 0 ? `<div class="empty">No hay tiendas. Añade la primera.</div>` : `
+  ${tiendas.length===0 ? `<div class="empty">No hay tiendas. Añade la primera.</div>` : `
   <div class="card">
-    <div class="card-title">${tiendas.length} tienda${tiendas.length>1?"s":""} registrada${tiendas.length>1?"s":""}</div>
-    ${tiendas.map(t => `
-    <div style="display:flex;justify-content:space-between;align-items:center;
-      padding:14px 0;border-bottom:1px solid var(--border);">
+    <div class="card-title">${tiendas.length} tienda${tiendas.length>1?"s":""}</div>
+    ${tiendas.map(t=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:15px;color:var(--text);">${t}</span>
-      <button onclick="deleteTienda('${t}')"
-        style="background:transparent;border:1px solid #c05a20;border-radius:4px;
-        color:#c05a20;padding:6px 12px;font-size:12px;cursor:pointer;font-family:Georgia,serif;">
-        🗑️ Eliminar
-      </button>
+      <button onclick="deleteTienda('${t}')" class="borrar-btn">🗑️ Eliminar</button>
     </div>`).join("")}
   </div>`}
 
-  ${arreglosCustom.length > 0 ? `
+  ${arreglosCustom.length>0 ? `
   <div class="card">
-    <div class="card-title">Arreglos personalizados guardados</div>
-    ${[...new Set(arreglosCustom.map(a=>a.tipo))].map(tipo => `
+    <div class="card-title">Arreglos personalizados</div>
+    ${[...new Set(arreglosCustom.map(a=>a.tipo))].map(tipo=>`
       <div style="margin-bottom:16px;">
         <div style="font-size:11px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;">${tipo}</div>
         ${arreglosCustom.filter(a=>a.tipo===tipo).map(a=>`
-        <div style="display:flex;justify-content:space-between;align-items:center;
-          padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
           <span style="font-size:14px;color:var(--text);flex:1;">${a.nombre}</span>
           <span style="font-size:13px;color:var(--gold);min-width:60px;text-align:right;">${eur(a.precio)}</span>
-          <button onclick="eliminarArregloCustom('${a.tipo}','${a.nombre}')"
-            style="background:transparent;border:1px solid #c05a20;border-radius:4px;
-            color:#c05a20;padding:4px 8px;font-size:12px;cursor:pointer;font-family:Georgia,serif;">
-            🗑️
-          </button>
+          <button onclick="eliminarArregloCustom('${a.tipo}','${a.nombre}')" class="borrar-btn">🗑️</button>
         </div>`).join("")}
       </div>
     `).join("")}
   </div>` : ""}`;
 }
 
-function bindEvents(){}
+async function addTienda() {
+  const input = document.getElementById("nuevaTiendaInput");
+  const nombre = input ? input.value.trim() : nuevaTienda.trim();
+  if(!nombre){ alert("Escribe el nombre de la tienda."); return; }
+  if(tiendas.map(t=>t.toLowerCase()).includes(nombre.toLowerCase())){ alert("Esa tienda ya existe."); return; }
+  showLoading();
+  const res = await apiCall({action:"addTienda", nombre});
+  hideLoading();
+  if(res.success){ tiendas.push(nombre); nuevaTienda=""; showToast("Tienda añadida ✓"); render(); }
+  else alert("Error: "+(res.error||"No se pudo añadir"));
+}
+
+async function deleteTienda(nombre) {
+  if(!confirm("¿Eliminar la tienda "+nombre+"?")) return;
+  showLoading();
+  const res = await apiCall({action:"deleteTienda", nombre});
+  hideLoading();
+  if(res.success){ tiendas=tiendas.filter(t=>t!==nombre); showToast("Tienda eliminada ✓"); render(); }
+  else alert("Error: "+(res.error||"No se pudo eliminar"));
+}
+
+async function eliminarArregloCustom(tipo, nombre) {
+  if(!confirm("¿Eliminar el arreglo "+nombre+"?")) return;
+  showLoading();
+  const res = await apiCall({action:"deleteArregloCustom", tipo, nombre});
+  hideLoading();
+  if(res.success){ arreglosCustom=arreglosCustom.filter(a=>!(a.tipo===tipo&&a.nombre===nombre)); showToast("Arreglo eliminado ✓"); render(); }
+  else alert("Error: "+(res.error||"No se pudo eliminar"));
+}
+
+// ---- RENDER ----
+function render() {
+  const m = document.getElementById("main");
+  if(vista==="entrada") m.innerHTML = renderEntrada();
+  else if(vista==="registro") m.innerHTML = renderRegistro();
+  else if(vista==="control") m.innerHTML = renderControl();
+  else if(vista==="contabilidad") m.innerHTML = renderContabilidad();
+  else if(vista==="tiendas") m.innerHTML = renderTiendas();
+}
 
 // ---- INIT ----
-cargarPrendas();
+cargarGrupos();
 </script>
 </body>
 </html>
