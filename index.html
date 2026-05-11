@@ -15,7 +15,7 @@
     --faint:#b0ada8;--alert:#c05a20;--alertbg:#fff3ec;
     --green:#2a7a2a;--greenbg:#edf7ed;
   }
-  html,body{height:100%;background:var(--bg);color:var(--text);font-family:Georgia,'Times New Roman',serif;overflow-x:hidden;}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Helvetica Neue',Arial,sans-serif;overflow-x:hidden;font-size:17px;}
 
   .header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
   .header-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px;}
@@ -29,20 +29,20 @@
 
   .nav{display:flex;border-top:1px solid var(--border);}
   .nav-btn{flex:1;background:transparent;border:none;border-bottom:2px solid transparent;
-    color:var(--dim);padding:8px 2px;cursor:pointer;font-size:10px;letter-spacing:.04em;
-    font-family:Georgia,serif;display:flex;flex-direction:column;align-items:center;gap:2px;}
+    color:var(--dim);padding:10px 2px;cursor:pointer;font-size:12px;letter-spacing:.02em;
+    font-family:'Helvetica Neue',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;}
   .nav-btn.active{color:var(--gold);border-bottom:2px solid var(--gold);}
   .nav-icon{font-size:16px;}
 
   .main{padding:16px 12px 80px;}
 
   .card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:20px 16px;margin-bottom:12px;}
-  .card-title{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px;}
+  .card-title{font-size:14px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:18px;font-weight:700;}
 
   .field{margin-bottom:16px;}
-  .label{display:block;font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:7px;}
+  .label{display:block;font-size:13px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
   select,input,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;
-    color:var(--text);padding:11px 12px;font-size:15px;font-family:Georgia,serif;outline:none;
+    color:var(--text);padding:13px 14px;font-size:17px;font-family:'Helvetica Neue',Arial,sans-serif;outline:none;
     -webkit-appearance:none;appearance:none;}
   input[type=number]{-moz-appearance:textfield;}
   input[type=date]{color:var(--text);}
@@ -51,8 +51,8 @@
 
   .arreglos-grid{display:flex;flex-direction:column;gap:6px;}
   .arreglo-btn{background:var(--bg);border:1px solid var(--border);border-radius:4px;
-    color:var(--muted);padding:11px 14px;cursor:pointer;display:flex;
-    justify-content:space-between;align-items:center;font-size:13px;font-family:Georgia,serif;
+    color:var(--muted);padding:14px 16px;cursor:pointer;display:flex;
+    justify-content:space-between;align-items:center;font-size:16px;font-family:'Helvetica Neue',Arial,sans-serif;
     text-align:left;width:100%;}
   .arreglo-btn.sel{background:#f0ebe0;border-color:var(--gold);color:var(--text);}
   .arreglo-precio{color:var(--gold);font-size:12px;margin-left:8px;white-space:nowrap;}
@@ -71,7 +71,7 @@
   .remove-btn{background:transparent;border:none;color:var(--faint);cursor:pointer;font-size:16px;padding:0 6px;}
 
   .primary-btn{background:var(--gold);color:#fff;border:none;border-radius:4px;
-    padding:15px 32px;font-size:14px;font-family:Georgia,serif;letter-spacing:.1em;
+    padding:18px 32px;font-size:18px;font-family:'Helvetica Neue',Arial,sans-serif;letter-spacing:.05em;
     cursor:pointer;width:100%;font-weight:700;margin-top:8px;}
   .primary-btn:disabled{background:var(--border);color:var(--faint);cursor:not-allowed;}
 
@@ -79,13 +79,13 @@
   .grupo-card{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:12px;overflow:hidden;}
   .grupo-header{display:flex;justify-content:space-between;align-items:center;
     padding:12px 14px;border-bottom:1px solid var(--border);background:var(--card2);}
-  .grupo-num{color:var(--gold);font-size:15px;font-weight:700;letter-spacing:.1em;margin-right:8px;}
+  .grupo-num{color:var(--gold);font-size:20px;font-weight:700;letter-spacing:.1em;margin-right:8px;}
   .grupo-tienda{color:var(--muted);font-size:12px;}
   .grupo-fecha{color:var(--faint);font-size:10px;}
   .prenda-bloque{padding:10px 14px;border-bottom:1px solid var(--card2);}
   .prenda-tipo-label{font-size:11px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
   .ar-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px;border-bottom:1px solid var(--card2);}
-  .ar-nombre{color:var(--muted);flex:1;}
+  .ar-nombre{color:var(--muted);flex:1;font-size:16px;}
   .ar-precio{color:var(--gold);font-size:12px;}
   .prenda-subtotal{text-align:right;font-size:12px;color:var(--text);padding-top:6px;font-weight:700;}
   .grupo-footer{display:flex;justify-content:space-between;align-items:center;
@@ -98,11 +98,11 @@
 
   /* CONTROL */
   .check-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--card2);}
-  .check-box{width:22px;height:22px;border:2px solid var(--border);border-radius:4px;
+  .check-box{width:32px;height:32px;border:2px solid var(--border);border-radius:6px;
     cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    font-size:14px;background:var(--bg);}
+    font-size:20px;background:var(--bg);}
   .check-box.checked{background:var(--greenbg);border-color:var(--green);color:var(--green);}
-  .check-nombre{font-size:13px;color:var(--muted);flex:1;}
+  .check-nombre{font-size:17px;color:var(--muted);flex:1;}
   .check-precio{font-size:12px;color:var(--gold);}
   .ctrl-footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);}
   .ctrl-btn{flex:1;border:none;border-radius:4px;padding:10px;font-size:12px;font-family:Georgia,serif;cursor:pointer;}
@@ -170,7 +170,7 @@
       <span class="nav-icon">◈</span>Registro
     </button>
     <button class="nav-btn" onclick="setVista('control')" id="nav-control">
-      <span class="nav-icon">◉</span>Control
+      <span class="nav-icon">◉</span>Albaranes
     </button>
     <button class="nav-btn" onclick="setVista('contabilidad')" id="nav-contabilidad">
       <span class="nav-icon">◎</span>Cobros
@@ -634,13 +634,23 @@ function renderGrupoCard(g, modo) {
         ${(p.arreglos||[]).map((ar,ai)=>`
           <div class="ar-row">
             <span class="ar-nombre">${ar}</span>
-            ${p.precios&&p.precios[ai]!==null&&p.precios[ai]!==undefined
-              ? `<span class="ar-precio">${eur(p.precios[ai])}</span>`
-              : `<span class="alerta-price">⚠ Sin precio</span>`}
+            <div style="display:flex;align-items:center;gap:6px;">
+              ${p.precios&&p.precios[ai]!==null&&p.precios[ai]!==undefined
+                ? `<span class="ar-precio">${eur(p.precios[ai])}</span>`
+                : `<span class="alerta-price">⚠</span>`}
+              <button onclick="eliminarArregloDeGrupo('${key}',${pi},${ai})"
+                style="background:transparent;border:none;color:var(--alert);cursor:pointer;font-size:20px;padding:2px 6px;line-height:1;">×</button>
+            </div>
           </div>
         `).join("")}
         ${p.notas?`<div style="font-size:11px;color:var(--dim);font-style:italic;padding-top:4px;">📝 ${p.notas}</div>`:""}
-        <div class="prenda-subtotal">Subtotal: ${eur(subtotal)}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;">
+          <button onclick="eliminarPrendaDeGrupo('${key}',${pi})"
+            style="background:transparent;border:1px solid var(--alert);border-radius:4px;color:var(--alert);padding:5px 10px;font-size:13px;cursor:pointer;">
+            🗑️ Quitar prenda
+          </button>
+          <div class="prenda-subtotal">Subtotal: ${eur(subtotal)}</div>
+        </div>
       </div>`;
     }).join("")}
     <div class="grupo-footer">
@@ -656,6 +666,41 @@ function renderGrupoCard(g, modo) {
       </div>
     </div>
   </div>`;
+}
+
+async function eliminarArregloDeGrupo(key, pi, ai) {
+  if(!confirm("¿Eliminar este arreglo?")) return;
+  const g = grupos.find(x=>grupoKey(x)===key);
+  if(!g) return;
+  const p = g.prendas[pi];
+  if(!p) return;
+  p.arreglos.splice(ai, 1);
+  p.precios.splice(ai, 1);
+  g.totalGrupo = g.prendas.reduce((s,pr)=>s+(pr.precios||[]).reduce((s2,v)=>s2+(v||0),0),0);
+  apiCall({action:"updateGrupo", numeroGrupo:g.numeroGrupo, tienda:g.tienda, fecha:g.fecha, prendas:g.prendas});
+  showToast("Arreglo eliminado ✓");
+  render();
+}
+
+async function eliminarPrendaDeGrupo(key, pi) {
+  if(!confirm("¿Eliminar esta prenda del grupo?")) return;
+  const g = grupos.find(x=>grupoKey(x)===key);
+  if(!g) return;
+  if(g.prendas.length === 1) {
+    if(!confirm("Es la única prenda del grupo. ¿Eliminar el grupo completo?")) return;
+    showLoading();
+    await apiCall({action:"deleteGrupo", numeroGrupo:g.numeroGrupo, tienda:g.tienda, fecha:g.fecha});
+    hideLoading();
+    grupos = grupos.filter(x=>grupoKey(x)!==key);
+    showToast("Grupo eliminado ✓");
+    render();
+    return;
+  }
+  g.prendas.splice(pi, 1);
+  g.totalGrupo = g.prendas.reduce((s,pr)=>s+(pr.precios||[]).reduce((s2,v)=>s2+(v||0),0),0);
+  apiCall({action:"updateGrupo", numeroGrupo:g.numeroGrupo, tienda:g.tienda, fecha:g.fecha, prendas:g.prendas});
+  showToast("Prenda eliminada ✓");
+  render();
 }
 
 async function actualizarEstado(key, estado) {
@@ -688,7 +733,7 @@ function renderControl() {
 
   return `
   <div class="card">
-    <div class="card-title">Control de calidad</div>
+    <div class="card-title">Albaranes</div>
     <div class="field">
       <label class="label">Tienda</label>
       <select onchange="filtroControl.tienda=this.value;render()">
@@ -733,7 +778,7 @@ function renderControl() {
                   ${ck?"✓":""}
                 </div>
                 <span class="check-nombre">${ar}</span>
-                ${p.precios&&p.precios[ai]!==null?`<span class="check-precio">${eur(p.precios[ai])}</span>`:""}
+              
               </div>`;
             }).join("")}
             ${p.notas?`<div style="font-size:11px;color:var(--dim);font-style:italic;padding-top:4px;">📝 ${p.notas}</div>`:""}
