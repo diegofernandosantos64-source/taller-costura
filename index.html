@@ -157,26 +157,37 @@
       <div class="logo">TALLER</div>
       <div class="logo-sub">gestión de arreglos</div>
     </div>
-    <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncText">Conectando…</span>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="sync-status">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncText">Conectando…</span>
+      </div>
+      <button onclick="toggleMenuOculto()" id="btnMenuOculto"
+        style="background:transparent;border:none;cursor:pointer;color:var(--faint);
+        font-size:22px;padding:4px 6px;line-height:1;letter-spacing:2px;">···</button>
     </div>
+  </div>
+  <div id="menuOculto" style="display:none;background:var(--card2);border-top:1px solid var(--border);
+    padding:8px 16px;display:none;gap:8px;flex-wrap:wrap;">
+    <button onclick="setVistaOculta('registro')"
+      style="background:var(--bg);border:1px solid var(--border);border-radius:4px;
+      padding:8px 16px;font-size:14px;font-family:'Helvetica Neue',Arial,sans-serif;
+      color:var(--text);cursor:pointer;">◈ Registro</button>
+    <button onclick="setVistaOculta('contabilidad')"
+      style="background:var(--bg);border:1px solid var(--border);border-radius:4px;
+      padding:8px 16px;font-size:14px;font-family:'Helvetica Neue',Arial,sans-serif;
+      color:var(--text);cursor:pointer;">◎ Cobros</button>
+    <button onclick="setVistaOculta('tiendas')"
+      style="background:var(--bg);border:1px solid var(--border);border-radius:4px;
+      padding:8px 16px;font-size:14px;font-family:'Helvetica Neue',Arial,sans-serif;
+      color:var(--text);cursor:pointer;">◫ Tiendas</button>
   </div>
   <nav class="nav">
     <button class="nav-btn active" onclick="setVista('entrada')" id="nav-entrada">
       <span class="nav-icon">✦</span>Entrada
     </button>
-    <button class="nav-btn" onclick="setVista('registro')" id="nav-registro">
-      <span class="nav-icon">◈</span>Registro
-    </button>
     <button class="nav-btn" onclick="setVista('control')" id="nav-control">
       <span class="nav-icon">◉</span>Albaranes
-    </button>
-    <button class="nav-btn" onclick="setVista('contabilidad')" id="nav-contabilidad">
-      <span class="nav-icon">◎</span>Cobros
-    </button>
-    <button class="nav-btn" onclick="setVista('tiendas')" id="nav-tiendas">
-      <span class="nav-icon">◫</span>Tiendas
     </button>
   </nav>
 </div>
@@ -260,6 +271,7 @@ let contAno = new Date().getFullYear();
 let gruposContabilidad = null;
 let editPrecios = {};
 let vista = "entrada";
+let menuOcultoVisible = false;
 
 function hoyStr() {
   const h = new Date();
@@ -318,10 +330,34 @@ function showToast(msg){const t=document.getElementById("toast");t.textContent=m
 function showLoading(){document.getElementById("loadingOverlay").style.display="flex";}
 function hideLoading(){document.getElementById("loadingOverlay").style.display="none";}
 
+function toggleMenuOculto() {
+  menuOcultoVisible = !menuOcultoVisible;
+  const menu = document.getElementById("menuOculto");
+  const btn = document.getElementById("btnMenuOculto");
+  menu.style.display = menuOcultoVisible ? "flex" : "none";
+  btn.style.color = menuOcultoVisible ? "var(--gold)" : "var(--faint)";
+}
+
+function setVistaOculta(v) {
+  menuOcultoVisible = false;
+  const menu = document.getElementById("menuOculto");
+  menu.style.display = "none";
+  document.getElementById("btnMenuOculto").style.color = "var(--faint)";
+  // Quitar activo del nav principal
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  vista = v;
+  render();
+}
+
 function setVista(v){
   vista=v;
+  menuOcultoVisible = false;
+  const menu = document.getElementById("menuOculto");
+  if(menu) menu.style.display = "none";
+  document.getElementById("btnMenuOculto").style.color = "var(--faint)";
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-  document.getElementById("nav-"+v).classList.add("active");
+  const navBtn = document.getElementById("nav-"+v);
+  if(navBtn) navBtn.classList.add("active");
   render();
 }
 
